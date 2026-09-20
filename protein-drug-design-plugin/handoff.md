@@ -35,8 +35,18 @@
    - MMseqs2 保留为家族快筛主力（实证 85G 直搜；ColabFold 服务端 MSA 同路线）；
    - jackhmmer 新增为流水线可选步骤 1d——远缘深挖 + AF3 原生 MSA 备料（AF2/AF3 特征管线内置组件，unpairedMsa 语义对齐最稳）；
    - tool-matrix 新增 "Jackhmmer vs MMseqs2 实证选型" 小节（速度/灵敏度/格式兼容三维对比 + 结论）。
-3. **IP 脱敏**：同步 GitHub 前将 user@<REMOTE_HOST>:<REMOTE_PORT> 全部替换为 <REMOTE_HOST>:<REMOTE_PORT> 占位符（structure-prediction-analysis/SKILL.md ×2 处、md-engine-comparison.md ×1 处），grep 验证 SENSITIVE-CLEAN。
-4. **GitHub 同步**：整个插件项目推送至 https://github.com/RuijinHospitalVNAR/Academic-skills-and-plugin-development （protein-drug-design-plugin/ 子目录）。
+3. **IP 脱敏**：同步 GitHub 前将全部内网端点（user@<内网IP>:<端口> 形式）替换为 <REMOTE_HOST>:<REMOTE_PORT> 占位符（structure-prediction-analysis/SKILL.md ×2 处、md-engine-comparison.md ×1 处），grep 验证无字面量残留。真实地址仅存本地项目 handoff，不入库。
+4. **GitHub 同步（推送待授权）**：
+   - 本地克隆 <GIT_CLONE_DIR>（空仓库, main 分支），插件已复制为 protein-drug-design-plugin/ 子目录；
+   - commit 13f6b49 已完成（19 文件, 1225 行, "Add protein-drug-design plugin v0.1.1"）；
+   - ⚠️ push 被拒：<OLD_DEPLOY_KEY> 密钥对目标仓库只读（GitHub deploy key 仓库绑定）；
+   - 已生成专用密钥对 <DEPLOY_KEY_PATH>（ed25519, 无口令），公钥已交用户添加为该仓库 Deploy key（需勾选 Allow write access）；
+   - 用户添加后执行: GIT_SSH_COMMAND="ssh -i <DEPLOY_KEY_PATH> -o IdentitiesOnly=yes" git push -u origin main（在 <GIT_CLONE_DIR> 下）。
+
+## 更新 (2026-09-20 第三轮)
+
+1. **v0.1.1 已推送 GitHub**（main 13f6b49, <DEPLOY_KEY> key 生效）。
+2. **数据采集模块补齐（用户指出缺口，采纳）**：新增 references/data-acquisition.md——NCBI E-utilities（efetch 批量 FASTA ≤200/post、esearch→efetch 链、elink→efetch 基因组上下文 A9 操纵子实证链、web BLAST URL API）、UniProt REST（fasta/search/注释字段）、RCSB/AFDB 结构拉取（含网络受限降级方案）、Foldseek 结果落盘、采集规范（manifest/幂等/限速/版本锚定/原文落盘）。SKILL.md 流水线补"步骤1.5 数据采集"、产出清单补 raw/ 目录、触发词补数据下载等；playbook Step1.5/Step3/Step4 接入链接。
 
 ## 下一步计划
 

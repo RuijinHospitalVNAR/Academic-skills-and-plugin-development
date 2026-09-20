@@ -30,7 +30,7 @@ jackhmmer -N 3 --cpu 8 query.fasta uniref90_db > jackhmmer_uniref90.sto
 
 **报告三元组铁律**：每个 Top hit 记 `identity / coverage / bit-score(E-value)`。A9 实证：nr Top1 WP_002592014.1 = α/β hydrolase [Enterocloster], 100% id (290/290), bit 597 → 物种锁定。
 
-**产物族谱收簇**：Top 命中收 FASTA → MAFFT 比对 → 催化基序保守性图（motif 正则/MEME de novo + 比对列位）。
+**步骤 1.5 采集与收簇**：Top 命中按 ID 批量拉取原文（efetch ≤200/次 POST，manifest 登记——命令与限速规范见 [data-acquisition.md](data-acquisition.md)）→ MAFFT 比对 → 催化基序保守性图（motif 正则/MEME de novo + 比对列位）。
 
 ## Step 2. 结构层检索（Foldseek 两库）
 
@@ -54,7 +54,7 @@ A9 实证：afdb50 Top1 = A0A6I2GL88 "Alpha/beta hydrolase fold" (29% id, qcov 9
 1. **全局超叠**（Kabsch，官方库实现）：A9 vs 3h04 → 267 CA, RMSD 2.04Å。
    ⚠️ 手写 Kabsch 两坑：矩阵约定（`M=U@D@Vt, t=qc-pc@M`）与重复加质心；实现后必须过"同文件=0"自检，或直接用 gemmi/Biopython 官方 superpose。
 2. **催化残基几何对照表**：把候选催化残基映射到模板编号（注意 Foldseek 内部号 offset，3h04 案例为 +2），逐对距离对比。A9 vs 3h04：SerOG–HisNE2 2.73/2.77Å，HisND1–AspOD2 4.74/4.09Å → 三元组几何几乎重合。
-3. **口袋残基一一对应**：配体（或模板配体）4.5Å 内残基在两个结构中列出对照。
+3. **口袋残基一一对应**：配体（或模板配体）4.5Å 内残基在两个结构中列出对照。（模板结构如 3h04 从 RCSB 拉取：`curl -s https://files.rcsb.org/download/3H04.cif`）
    ⚠️ 移植配体姿态后 <1Å 接触可能含堆积伪影（侧链无重排），方向性结论仍有效但注明。
 
 ## Step 4. 基序与功能仲裁
@@ -63,7 +63,7 @@ A9 实证：afdb50 Top1 = A0A6I2GL88 "Alpha/beta hydrolase fold" (29% id, qcov 9
 - 反例警示（A9 实证两条）：
   - `GGGL` 看似 `GGGxG` 但第 6 位非 G → 不构成经典 Rossmann/核苷酸结合模体（用于排除 FAD 结合）；
   - Smith-Waterman 局部比对 vs HpxO 仅 36 分（噪声级）+ 最佳局部比对仅 10% 覆盖 → 无全局同源性 → 与"HpxO 型黄素蛋白"假说切割。
-- **基因组上下文仲裁**（折叠-功能矛盾时）：NCBI E-utilities 链 elink(protein→nuccore) → efetch(rettype=ft) 取邻接基因。A9 实证：位于保守尿囊素利用操纵子 (allH→allB×2→NCS1×2→**A9**→allE→allD→arcC)，共线性在第二菌株复现 → 功能与尿囊素分解通路强耦合 → 支持线性酰胺底物假说。
+- **基因组上下文仲裁**（折叠-功能矛盾时）：NCBI E-utilities 链 elink(protein→nuccore) → efetch(rettype=ft / gb) 取特征表与全注释，扫描定位基因 ±8kb 邻接（命令见 [data-acquisition.md](data-acquisition.md) §1）。A9 实证：位于保守尿囊素利用操纵子 (allH→allB×2→NCS1×2→**A9**→allE→allD→arcC)，共线性在第二菌株复现 → 功能与尿囊素分解通路强耦合 → 支持线性酰胺底物假说。
 - 家族归属须写 **VERDICT.md**：序列层证据（1a/1b/1c）+ 结构层证据（2/3）+ motif/几何核对 + 机制含义 + 残留不确定性。
 
 ## Step 5. 与下游技能的衔接

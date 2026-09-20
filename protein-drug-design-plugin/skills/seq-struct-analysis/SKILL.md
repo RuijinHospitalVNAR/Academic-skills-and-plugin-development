@@ -1,6 +1,6 @@
 ---
 name: seq-struct-analysis
-description: 蛋白质序列与结构检索、获取、清洗与分析流水线。Use when 用户要鉴定蛋白家族归属或同源序列（BLAST/Jackhmmer/HHsuite/MMseqs2）、做结构相似性检索与折叠归类（Foldseek afdb50/pdb100、TM-align/DALI）、获取与清洗 PDB/FASTA 数据（残基号修复、链提取、CIF 转换）、做多序列比对与催化基序保守性分析（MAFFT/MUSCLE/MMseqs2 + MEME/FIMO motif 发现与扫描）、或串联"序列层+结构层"双重证据回答"这个蛋白是什么/像谁/催化机器是什么"。关键词：家族鉴定、同源检索、foldseek、mmseqs2、hmmer、jackhmmer、meme、fimo、hhpred、BLAST、序列分析、结构比对、TM-score、催化三联体、motif。
+description: 蛋白质序列与结构检索、获取、清洗与分析流水线。Use when 用户要鉴定蛋白家族归属或同源序列（BLAST/Jackhmmer/HHsuite/MMseqs2）、从远端库采集数据（NCBI E-utilities/UniProt/RCSB/AlphaFold DB 批量下载序列与结构、基因组邻接区/操纵子扫描）、做结构相似性检索与折叠归类（Foldseek afdb50/pdb100、TM-align/DALI）、获取与清洗 PDB/FASTA 数据（残基号修复、链提取、CIF 转换）、做多序列比对与催化基序保守性分析（MAFFT/MUSCLE/MMseqs2 + MEME/FIMO motif 发现与扫描）、或串联"序列层+结构层"双重证据回答"这个蛋白是什么/像谁/催化机器是什么"。关键词：家族鉴定、同源检索、foldseek、mmseqs2、hmmer、jackhmmer、meme、fimo、hhpred、BLAST、序列分析、结构比对、数据下载、efetch、uniprot、rcsb、afdb、数据采集、TM-score、催化三联体、motif。
 ---
 
 # 序列-结构分析流水线 (Sequence-Structure Analysis Pipeline)
@@ -12,7 +12,7 @@ description: 蛋白质序列与结构检索、获取、清洗与分析流水线�
 - 未知蛋白的家族归属 / 功能注释（序列+结构双证据）
 - 同源序列收集（建 MSA / 找催化基序 / 收 AF3 templates）
 - 结构近邻检索、实验结构锚点挑选（如 3h04 之于 A9）
-- 数据获取与清洗（PDB/CIF/FASTA 的常见坑处理）
+- 数据采集与清洗（NCBI/UniProt/RCSB/AFDB 远端拉取；PDB/CIF/FASTA 的常见坑处理）
 
 ## 1. 标准流水线（三步定案法）
 
@@ -21,10 +21,12 @@ description: 蛋白质序列与结构检索、获取、清洗与分析流水线�
 BLAST nr (近缘/物种来源)     Foldseek afdb50 (全景)       序列+结构证据交叉
 BLAST swissprot (人工注释)   Foldseek pdb100 (实验锚点)   催化残基/基序几何核对
 mmseqs2 UniRef90 (中远缘)    TM-align/RMSD 定量叠合       → 家族归属 + 机制图景
+      ↑ 步骤1.5 数据采集: 按 ID 拉取原文 (同源 FASTA/结构 CIF/基因组邻接区)
 ```
 
 命令级操作手册与 A9 全流程实例：[references/pipeline-playbook.md](references/pipeline-playbook.md)
-工具对比与选型矩阵（含 HMM/MME 档位）：[references/tool-matrix.md](references/tool-matrix.md)
+工具对比与选型矩阵（HMM/MMseqs2/MEME 档位）：[references/tool-matrix.md](references/tool-matrix.md)
+远端数据采集（NCBI/UniProt/RCSB/AFDB 拉取命令与限速规范）：[references/data-acquisition.md](references/data-acquisition.md)
 
 ## 2. 选型速查（详见 tool-matrix）
 
@@ -38,6 +40,7 @@ mmseqs2 UniRef90 (中远缘)    TM-align/RMSD 定量叠合       → 家族归�
 | 定量叠合 | TM-align / Kabsch | DALI | RMSD+TM-score 报告标准 |
 | MSA 构建 | MAFFT / MMseqs2 msa | MUSCLE | 下游 HMM 的输入 |
 | motif 发现/扫描 | **MEME Suite** (meme/FIMO/MAST) | 正则扫描 | meme de novo 发现保守基序（无需预设 pattern），FIMO/MAST 用已知矩阵扫 query；结果仍需结构距离二次验证 |
+| 远端采集 | NCBI efetch / UniProt REST / RCSB / AFDB | — | 检索得 ID → 拉原文；命令与限速见 data-acquisition.md |
 
 ## 3. 高频坑速查
 
@@ -54,6 +57,7 @@ mmseqs2 UniRef90 (中远缘)    TM-align/RMSD 定量叠合       → 家族归�
 
 ```text
 family_analysis/
+├── raw/            采集原文: fetch_manifest.csv + {ncbi,uniprot,rcsb,afdb}/ 批量产物
 ├── blast/          nr + swissprot 的 xml/表格 (Top hits 三元组)
 ├── mmseqs/         uniref90 hits + query fasta
 ├── foldseek/       afdb50/pdb100 结果 json + top_hits_summary + 叠合产物 (xxx_on_yyy.pdb + 对比图)
