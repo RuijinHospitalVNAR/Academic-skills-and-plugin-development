@@ -2,7 +2,7 @@
 
 English | [简体中文](README.md)
 
-A **full-chain** protein drug design skill plugin built on the Tashan Research Agent Skills framework (v0.4.0, **44 skills**):
+A **full-chain** protein drug design skill plugin (v0.4.0, **44 skills**):
 
 - **Computation mainline** (4 in-house skills, empirically distilled): **sequence/structure identification → AI structure prediction & batch analysis → molecular dynamics validation → binding energy & mechanism deepening**
 - **Management & meta**: skill-manager (skill lifecycle governance)
@@ -21,7 +21,7 @@ protein-drug-design-plugin/
     ├── (computation mainline, 4)     # seq-struct-analysis / structure-prediction-analysis /
     │                                 # md-simulation-workflow / protein-design-workflow
     ├── (management, 1)               # skill-manager (add/merge/remove + ledger & audit)
-    ├── (Tashan Research, 19)         # academic-writing / scispark / experiment-design /
+    ├── (research chain, 19)         # academic-writing / scispark / experiment-design /
     │                                 # statistical-analysis / papercheck / visual-deck-builder / ...
     └── (nature-skills, 20)           # nature-writing / nature-reviewer / nature-paper-card /
                                       # nature-figure / nature-paper-to-patent / ...
@@ -109,7 +109,6 @@ The built-in `skill-manager` skill governs add/merge/remove for all plugin skill
 | CoVAbDab / OAS | Antibody sequence databases | OPIG (opig.stats.ox.ac.uk) |
 | ANARCII | Antibody numbering (transformer, native VNAR model) | github.com/oxpig/ANARCII (BSD-3) |
 | MMseqs2 / HMMER / Foldseek / MEME Suite | Sequence/structure search & motifs | respective official channels |
-| Tashan Research (tashan-research-skills) | 19 adopted skills (original plugin uninstalled; backup kept locally) | UCAS Tashan (tashan.ac.cn) |
 | nature-skills | 20 adopted skills | github.com/Yuan1z0825/nature-skills (Apache-2.0) |
 
 ## Extending
@@ -122,10 +121,10 @@ The built-in `skill-manager` skill governs add/merge/remove for all plugin skill
 
 - **0.4.0** (2026-09-20): added the skill-manager lifecycle module (semi-automatic generation → compare-based absorb/merge/reject → ledger + audit; single/batch modes; all 44 skills registered).
 - **0.3.0** (2026-09-20): adopted the complete nature-skills suite (20 skills, bilingual descriptions); added multi-IDE/desktop installer `install.sh`; removed platform-bound world-threads-entry.
-- **0.2.0** (2026-09-20): absorbed all 20 Tashan Research skills (4 boundary statements), 6 full-chain stages registered; original plugin uninstalled.
+- **0.2.0** (2026-09-20): adopted 20 research-chain skills (4 boundary statements), 6 full-chain stages registered.
 - **0.1.1** (2026-09-20): data-acquisition module (general + antibody–antigen + local SAbDab2 cache); ANARCII guidelines; endpoint sanitization.
 - **0.1.0** (2026-09-20): initial skeleton.
 
 ## License
 
-In-house portions are for research use. Adopted skills retain their original licenses (Tashan entries per their release terms; nature-skills under Apache-2.0). When citing protocols, please also cite the upstream tools and databases (see Acknowledgements).
+In-house portions are for research use. Adopted skills retain their original licenses (nature-skills under Apache-2.0; others per their release terms, with upstream attribution preserved inside each skill directory). When citing protocols, please also cite the upstream tools and databases (see Acknowledgements).

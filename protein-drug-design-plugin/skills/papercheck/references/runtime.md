@@ -4,7 +4,7 @@
 
 - `scripts/extract_citation_evidence.py` is the default no-key path. It extracts citation/reference/context evidence from `.docx`.
 - The mounted Codex model reviews the extracted evidence and writes the semantic citation-support judgment.
-- `assets/paperchecker-rules` is the bundled TaShan-PaperChecker rules engine for GB/T 7714-2015, UCAS-style format checks, and citation/reference matching.
+- `assets/paperchecker-rules` is the bundled GB/T 7714 + UCAS citation-rules engine for GB/T 7714-2015, UCAS-style format checks, and citation/reference matching.
 
 The old PaperCheck AI project needed a provider API key because it was not itself a Codex skill. This skill does not need that pattern: it uses local extraction plus the current model that is already running the skill.
 

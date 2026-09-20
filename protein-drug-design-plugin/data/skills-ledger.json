@@ -502,7 +502,7 @@
       "date_added": "2026-09-20",
       "source": "pre-existing(初始化扫描)",
       "provenance": "",
-      "fm_desc_head": "description: Run no-key citation audits for academic papers using local evidence extraction, bundled TaShan-PaperChecker rules, and the current Codex model. Use",
+      "fm_desc_head": "description: Run no-key citation audits for academic papers using local evidence extraction, bundled PaperCheck rules, and the current Codex model. Use",
       "merges_into": [],
       "absorbed_from": [],
       "trigger_notes": [],

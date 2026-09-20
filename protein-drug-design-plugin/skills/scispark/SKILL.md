@@ -8,7 +8,7 @@ description: Generate evidence-tracked research ideas through an arXiv-based, sk
 
 ## Overview
 
-Use this skill to turn a research keyword or early topic into a staged, evidence-tracked research idea. This is a skill-native adaptation of the Tashan Scispark workflow: the current Codex model does the reasoning, and arXiv is the paper-search route.
+Use this skill to turn a research keyword or early topic into a staged, evidence-tracked research idea. This is a skill-native adaptation of an open Scispark workflow: the current Codex model does the reasoning, and arXiv is the paper-search route.
 
 The normal workflow does not require an external model API key or separate search product account.
 

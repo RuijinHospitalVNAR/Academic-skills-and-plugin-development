@@ -93,6 +93,15 @@
    - 台账 data/skills-ledger.json（44 条）+ 审计 data/audit-log.jsonl（只追加）；用户级目录已装机。
 2. plugin.json keywords 补技能管理词；README 补技能管理小节；GitHub 推送。
 
+## 更新 (2026-09-21 第十一轮)
+
+1. **移除全部他山科研关联内容**（用户指令；调研确认 109 处命中无一在技能执行路径，删除不影响使用）：
+   - 改写 8 个自有文件（README×2/workflow.yaml/scispark/research-dream/papercheck SKILL+runtime/台账 fm_desc_head）——框架来源声明、致谢表行、版本历史措辞、UI 品牌词中性化；
+   - **整删 deploy_cite.sh**（唯一真实他山平台依赖脚本，技能从不调用；顺带清除公网 IP 与 SSH 密钥路径的敏感信息）；papercheck UI 外链（tashan.chat/TashanGKD）清理；
+   - papercheck 触发词 TaShan-PaperChecker→PaperCheck（保触发面）；research-dream "他山式分身"→"科研数字分身"。
+   - **保留**：handoff 历史记录（档案性质）；assets/paperchecker-rules 内 vendored 上游 README/CHANGELOG/front 目录名 tashan-ui（目录名被 app/main.py:62-64 代码引用，改名会致 /ui 404；vendored 项目按惯例保留原样）。
+2. 残留检查：除 vendored paperchecker-rules 目录内部与 handoff 历史外，grep 无他山/tashan 字样。GitHub 已同步推送。
+
 ## 下一步计划
 
 1. [ ] 实测触发：插件安装/注册后，用典型请求（"做这个蛋白的 MD"、"A9 是什么家族"）验证技能触发与加载链路。

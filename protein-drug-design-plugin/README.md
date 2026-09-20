@@ -2,7 +2,7 @@
 
 [English](README_EN.md) | 简体中文
 
-基于他山科研 Agent Skills 框架构建的蛋白质药物设计**全链路**技能插件（v0.4.0，**44 项技能**）：
+蛋白质药物设计**全链路**技能插件（v0.4.0，**44 项技能**）：
 
 - **计算主线**（4 项自研技能，实证固化）：**序列/结构鉴定 → AI 结构预测与批量分析 → 分子动力学验证 → 结合能与机制深化**
 - **管理与元技能**：skill-manager（技能生命周期管理）
@@ -21,7 +21,7 @@ protein-drug-design-plugin/
     ├── (计算主线 4 项)               # seq-struct-analysis / structure-prediction-analysis /
     │                                 # md-simulation-workflow / protein-design-workflow
     ├── (管理 1 项)                   # skill-manager（添加/合并/下架+台账审计）
-    ├── (他山科研 19 项)              # academic-writing / scispark / experiment-design /
+    ├── (科研全链路 19 项)              # academic-writing / scispark / experiment-design /
     │                                 # statistical-analysis / papercheck / visual-deck-builder / ...
     └── (nature-skills 20 项)         # nature-writing / nature-reviewer / nature-paper-card /
                                       # nature-figure / nature-paper-to-patent / ...
@@ -109,7 +109,6 @@ FASTA ──[seq-struct-analysis]──> 家族归属+结构锚点
 | CoVAbDab / OAS | 抗体序列库 | OPIG (opig.stats.ox.ac.uk) |
 | ANARCII | 抗体编号（transformer，原生 VNAR 模型） | github.com/oxpig/ANARCII (BSD-3) |
 | MMseqs2 / HMMER / Foldseek / MEME Suite | 序列/结构检索与 motif | 各官方发行渠道 |
-| 他山科研 tashan-research-skills | 收编 19 项（原插件已卸载，备份于本地） | 国科大他山 (tashan.ac.cn) |
 | nature-skills | 收编 20 项 | github.com/Yuan1z0825/nature-skills (Apache-2.0) |
 
 ## 扩展指南
@@ -121,11 +120,11 @@ FASTA ──[seq-struct-analysis]──> 家族归属+结构锚点
 ## 版本
 
 - **0.4.0** (2026-09-20)：新增 skill-manager 技能生命周期管理模块（半自动生成→对比三选一→台账+审计，单个/批量双模式，44 项技能全部入账）。
-- **0.3.0** (2026-09-20)：收编 nature-skills 全部 20 项（description 双语化）；新增多 IDE/桌面 agent 适配器 `install.sh`；移除深度绑定他山平台的 world-threads-entry。
-- **0.2.0** (2026-09-20)：全量收编他山科研 20 技能（4 项加边界声明），workflow.yaml 注册 6 个全链路阶段；卸载原他山插件。
+- **0.3.0** (2026-09-20)：收编 nature-skills 全部 20 项（description 双语化）；新增多 IDE/桌面 agent 适配器 `install.sh`；移除平台绑定的 world-threads-entry。
+- **0.2.0** (2026-09-20)：收编科研全链路 20 项技能（4 项加边界声明），workflow.yaml 注册 6 个全链路阶段。
 - **0.1.1** (2026-09-20)：数据采集板块（通用库+抗体-抗原库+SAbDab2 本地缓存）；ANARCII 编号规范；内网地址脱敏。
 - **0.1.0** (2026-09-20)：初版骨架，4 技能+工作流配置+扩展模板。
 
 ## 许可
 
-插件自研部分仅供科研使用。收编部分沿用其原始许可（他山科研条目按其发布条款、nature-skills 为 Apache-2.0）。引用本插件协议时请同时引用对应上游工具与数据库（见致谢表）。
+插件自研部分仅供科研使用。收编部分沿用其原始许可（nature-skills 为 Apache-2.0，其余按各自发布条款；上游署名保留于各技能目录内）。引用本插件协议时请同时引用对应上游工具与数据库（见致谢表）。

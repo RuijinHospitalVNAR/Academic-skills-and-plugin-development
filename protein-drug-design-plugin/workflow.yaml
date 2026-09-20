@@ -63,7 +63,7 @@ stages:
       - mechanism: "可选深化: PROPKA/CpHMD (pKa), QM/MM (反应坐标), FEP"
     proven_case: "MM/GBSA -16.79/-13.89 kcal/mol 双态对比; 块平均 SEM 校正 4.7x 低估"
 
-  # ===== 全链路扩展阶段 (v0.2.0 收编他山科研 20 技能) =====
+  # ===== 全链路扩展阶段 (v0.2.0 收编科研全链路 20 技能) =====
   research-ideation:                # 阶段0a: 文献调研与研究构思
     skill: scispark
     alternatives: [sci-employee-deep-research, giiisp-paper-search-apis]

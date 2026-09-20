@@ -1,6 +1,6 @@
 ---
 name: papercheck
-description: Run no-key citation audits for academic papers using local evidence extraction, bundled TaShan-PaperChecker rules, and the current Codex model. Use when Codex needs to check .docx论文引用合规、正文引文和参考文献是否匹配、引用真实性、引文与上下文相关性、GB/T 7714 or UCAS reference-format issues, or when the user mentions PaperCheck, TaShan-PaperChecker, citation compliance, reference audit, citation authenticity, or 引文核验.
+description: Run no-key citation audits for academic papers using local evidence extraction, bundled PaperChecker rules, and the current Codex model. Use when Codex needs to check .docx论文引用合规、正文引文和参考文献是否匹配、引用真实性、引文与上下文相关性、GB/T 7714 or UCAS reference-format issues, or when the user mentions PaperCheck, citation compliance, reference audit, citation authenticity, or 引文核验.
 ---
 
 # PaperCheck
@@ -16,7 +16,7 @@ Bundled runtime:
 
 Optional override:
 
-- `PAPERCHECK_RULES_REPO`: use a different TaShan-PaperChecker rules repo.
+- `PAPERCHECK_RULES_REPO`: use a different PaperChecker rules repo.
 
 Do not package or print private configs, uploaded papers, generated reports, dependency folders, caches, or API keys. The normal workflow does not need provider keys.
 
