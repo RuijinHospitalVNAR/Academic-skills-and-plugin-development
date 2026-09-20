@@ -8,8 +8,8 @@ import re, subprocess, sys, os
 
 PATTERNS = [
     (r"-----BEGIN (OPENSSH|RSA|EC|DSA|PGP) PRIVATE KEY-----", "私钥块"),
-    (r"\bghp_[A-Za-z0-9]{36}\b", "GitHub PAT"),
-    (r"\bgho_[A-Za-z0-9]{36}\b", "GitHub OAuth token"),
+    (r"\bghp_[A-Za-z0-9]{30,}\b", "GitHub PAT"),
+    (r"\bgho_[A-Za-z0-9]{30,}\b", "GitHub OAuth token"),
     (r"\bgithub_pat_[A-Za-z0-9_]{22,}\b", "GitHub fine-grained PAT"),
     (r"\bsk-[A-Za-z0-9]{20,}\b", "OpenAI/Anthropic key"),
     (r"\bAKIA[0-9A-Z]{16}\b", "AWS AccessKey"),
