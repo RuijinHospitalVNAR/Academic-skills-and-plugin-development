@@ -2,7 +2,10 @@
 
 English | [简体中文](README.md)
 
-A domain skill plugin for protein drug design built on the Trae / Tashan Research Agent Skills framework. Four skills cover the core pipeline: **sequence/structure identification → AI structure prediction & batch analysis → molecular dynamics validation → binding energy & mechanism deepening**. All protocols and criteria are distilled from real research projects (GPCR nanobody design, A9 uricase mechanism study, 48-system 500ns MD extension analysis).
+A **full-chain** protein drug design skill plugin built on the Trae / Tashan Research Agent Skills framework. As of v0.2.0 it **absorbs all 20 skills from the former Tashan Research plugin** (24 skills in total):
+
+- **Computation mainline** (4 in-house skills): **sequence/structure identification → AI structure prediction & batch analysis → molecular dynamics validation → binding energy & mechanism deepening**
+- **Full-chain extensions** (20 adopted skills): literature research → research ideation → pre-collection experiment design & preregistration → post-collection statistical analysis → academic writing → manuscript review → presentation (slides/video/figures) **sequence/structure identification → AI structure prediction & batch analysis → molecular dynamics validation → binding energy & mechanism deepening**. All protocols and criteria are distilled from real research projects (GPCR nanobody design, A9 uricase mechanism study, 48-system 500ns MD extension analysis).
 
 ## Directory Layout
 
@@ -20,12 +23,26 @@ protein-drug-design-plugin/
 
 ## Skills
 
+### Computation mainline (4 in-house)
+
 | Skill | Content | Provenance |
 |---|---|---|
 | **seq-struct-analysis** | Three-step family-identification (BLAST/Jackhmmer/MMseqs2 sequence layer + Foldseek/TM-align structure layer); data acquisition (NCBI E-utilities, UniProt REST, RCSB, AlphaFold DB); antibody–antigen database acquisition (**local SAbDab2 cache**, CoVAbDab, OAS, IMGT/IgBLAST, IEDB); antibody numbering (**ANARCII transformer first — VNAR requires the dedicated `-t vnar` model**); MEME motif discovery | Distilled from a full case: 290aa unknown protein → α/β-hydrolase family verdict |
 | **structure-prediction-analysis** | AF3/Protenix/OpenDDE batch inference (two-stage MSA-first + multi-GPU round-robin + slim transfer); dual-axis quadrant result analysis (confidence × pose convergence, targeted-epitope mode, membrane-side accessibility) | Distilled from MC2R/MC4R VNAR design project (151 candidates × 100 seeds) |
 | **md-simulation-workflow** | Full AMBER pipeline (structure prep → BCC/RESP ligand parameterization → tleap triple-guards → min/heat/equil/prod → cpptraj analysis); convergence dual-criteria (core-region RMSD + block-average SEM); five-engine comparison (AMBER/GROMACS/NAMD/CHARMM/OpenMM); CpHMD three prohibitions; QM/MM SCF-convergence root-cause rule; MM/GBSA(PBSA) protocols | Distilled from A9 uricase (4 systems) + 48-system 500–769ns extension project |
 | **protein-design-workflow** | Task routing rules, five-stage data contracts, empirical compute-scheduling baselines, four-step onboarding for new skills/engines, inter-stage checkpoints | Orchestration layer design |
+
+### Full-chain extensions (20 adopted)
+
+| Category | Skills |
+|---|---|
+| Literature & ideation | scispark, sci-employee-deep-research, giiisp-paper-search-apis |
+| Design & statistics | experiment-design (preregistration/DOE/power), statistical-analysis, research-baseline-builder |
+| Writing & review | academic-writing, scientific-humanization, papercheck, thesis-audit-reviewer |
+| Presentation | visual-deck-builder, practical-course-producer, manim-agent, giiisp-scientific-image-generation |
+| Tooling & meta | find-science-skills, skill-criticagent, mcp-criticagent |
+| Memory & profile | cognitive-profile, research-dream |
+| Platform | world-threads-entry (Tashan TopicLab/OpenClaw) |
 
 ## Workflow Overview
 
@@ -74,6 +91,7 @@ The data-acquisition module relies on the following public services and database
 
 ## Changelog
 
+- **0.2.0** (2026-09-20): **absorbed all 20 Tashan Research skills** (4 trigger-overlapping skills annotated with boundary statements), registered 6 full-chain stages in workflow.yaml, uninstalled the original Tashan plugin to avoid double-triggering.
 - **0.1.1** (2026-09-20): data-acquisition module (general + antibody–antigen databases + local SAbDab2 cache); ANARCII numbering guidelines; internal-endpoint sanitization.
 - **0.1.0** (2026-09-20): initial skeleton — four skills + workflow config + extension template.
 

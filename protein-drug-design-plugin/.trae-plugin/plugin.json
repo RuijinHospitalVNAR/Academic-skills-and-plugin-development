@@ -1,40 +1,56 @@
 {
   "name": "protein-drug-design",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "displayName": "蛋白质药物设计 Skills",
   "displayNameEn": "Protein Drug Design Skills",
-  "description": "蛋白质药物设计领域技能集：结构预测批量部署与结果分析、分子动力学模拟全流程（AMBER 主力+多引擎选型）、蛋白质序列-结构分析流水线（HMM/MMseqs2/Foldseek），以及端到端工作流编排。",
-  "descriptionEn": "Protein drug design skill set: structure prediction batch deployment & analysis, full MD simulation workflow (AMBER-first with multi-engine guidance), protein sequence-structure analysis pipeline (HMM/MMseqs2/Foldseek), and end-to-end workflow orchestration.",
+  "description": "蛋白质药物设计全链路技能插件：序列/结构分析、AF3 批量预测、MD 模拟（AMBER 主力）、结合能计算，以及文献调研、研究构思、实验设计、统计分析、学术写作、论文审查、成果展示（PPT/视频/配图）等科研全流程 24 项技能。",
+  "descriptionEn": "Full-chain protein drug design skill plugin: sequence/structure analysis, AF3 batch prediction, MD simulation (AMBER-first), binding-energy calculation, plus literature research, research ideation, experiment design, statistical analysis, academic writing, manuscript review, and presentation (slides/video/figures) — 24 skills covering the entire research pipeline.",
   "i18n": {
     "display_name": {
       "zh-cn": "蛋白质药物设计 Skills",
       "en": "Protein Drug Design Skills"
     },
     "description": {
-      "zh-cn": "蛋白质药物设计领域技能集：结构预测批量部署与结果分析、分子动力学模拟全流程（AMBER 主力+多引擎选型）、蛋白质序列-结构分析流水线（HMM/MMseqs2/Foldseek），以及端到端工作流编排。",
-      "en": "Protein drug design skill set: structure prediction batch deployment & analysis, full MD simulation workflow, protein sequence-structure analysis pipeline, and end-to-end workflow orchestration."
+      "zh-cn": "蛋白质药物设计全链路技能插件：序列/结构分析、AF3 批量预测、MD 模拟（AMBER 主力）、结合能计算，以及文献调研、研究构思、实验设计、统计分析、学术写作、论文审查、成果展示（PPT/视频/配图）等科研全流程 24 项技能。",
+      "en": "Full-chain protein drug design skill plugin: sequence/structure analysis, AF3 batch prediction, MD simulation (AMBER-first), binding-energy calculation, plus literature research, research ideation, experiment design, statistical analysis, academic writing, manuscript review, and presentation (slides/video/figures) — 24 skills covering the entire research pipeline."
     }
   },
   "author": {
     "name": "wcf"
   },
   "keywords": [
-    "蛋白质设计",
-    "蛋白药物",
-    "结构预测",
-    "AlphaFold3",
-    "分子动力学",
-    "MD模拟",
     "AMBER",
-    "GROMACS",
-    "序列分析",
+    "AlphaFold3",
     "Foldseek",
-    "MMseqs2",
+    "GROMACS",
     "HMMER",
-    "protein design",
+    "MD模拟",
+    "MMseqs2",
+    "Manim",
+    "PPT",
+    "academic writing",
+    "deep research",
     "molecular dynamics",
+    "peer review",
+    "protein design",
+    "sequence analysis",
     "structure prediction",
-    "sequence analysis"
+    "分子动力学",
+    "去AI味",
+    "学位论文",
+    "学术写作",
+    "学术润色",
+    "序列分析",
+    "文献调研",
+    "研究构思",
+    "科研绘图",
+    "答辩",
+    "结构预测",
+    "统计分析",
+    "蛋白药物",
+    "蛋白质设计",
+    "论文审查",
+    "预注册"
   ],
   "skills": "./skills/"
 }

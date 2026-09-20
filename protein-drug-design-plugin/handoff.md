@@ -67,6 +67,16 @@
 1. **智能体接入完成（用户指令）**：插件三新技能 (md-simulation-workflow / seq-struct-analysis / protein-design-workflow) 已复制到用户级技能目录 ~/.trae-cn/skills/（frontmatter 校验过），蛋白质药物设计智能体可立即触发；structure-prediction-analysis 原件已在目录，未动。被覆盖的同名 OPIG 英文版 protein-design-workflow 已备份为 protein-design-workflow.bak_opig_20260920。
 2. **仓库级双语 README**：撰写 README.md（中文版）+ README_EN.md（English version），含插件简介/技能表/工作流图/安装方式（含智能体接入说明）/数据来源与致谢（OPIG/SAbDab2/Zenodo/ANARCII 等）/许可注记。GitHub 已推送。
 
+## 更新 (2026-09-20 第八轮 · v0.2.0)
+
+1. **全量收编他山科研 20 技能**（用户确认插件定位为蛋白设计+写作全链路，14 项不再视为噪音）：
+   - 复制 20 技能入 skills/（总量 24）；备份 <BACKUP_DIR>/tashan-research-skills-backup-20260920.tar.gz (1.7MB)。
+   - 4 个触发面冲突技能加边界声明（description 末尾）：experiment-design（MD矩阵排期→protein-design-workflow）、statistical-analysis（MD收敛判据→md-simulation-workflow）、scispark（计算机制深化→md-simulation-workflow）、research-baseline-builder（跨阶段路由→protein-design-workflow）。
+   - plugin.json v0.2.0（全链路描述+32关键词）；workflow.yaml 注册 6 个全链路阶段（research-ideation/research-planning/statistical-validation/writing/review/presentation，含 alternatives），stages 总数 11。
+2. **卸载他山插件**：官方市场入口无法脚本调用，按兜底路径执行：tar 备份 → rm <HOME>/.trae-cn/plugins/trae-remote-official/tashan-research-skills/ → 清 plugin-config.json 的启用条目 → 清 installed-plugins.json 的市场条目（python json 编辑）。验证：目录不存在+两 json 无 tashan 残留。
+3. **智能体目录同步**：20 技能复制到 ~/.trae-cn/skills/（⚠️ statistical-analysis 与全局 K-Dense 英文版同名，K-Dense 版先备份为 statistical-analysis.bak_kdense_20260920 再覆盖；experiment-design(tashan) 与 experimental-design(K-Dense) 不同名不冲突）。
+4. 双语 README 更新全链路口径+收编说明；GitHub 推送。
+
 ## 下一步计划
 
 1. [ ] 实测触发：插件安装/注册后，用典型请求（"做这个蛋白的 MD"、"A9 是什么家族"）验证技能触发与加载链路。

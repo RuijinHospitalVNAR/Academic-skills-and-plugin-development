@@ -3,7 +3,7 @@
 # 约定: 本文件只做"编排声明"，具体执行逻辑在各 skill 的 SKILL.md 中。
 #       新增技能时: (1) 在 stages 中注册条目; (2) 在 extension_points 中预留钩子即可，无需改代码。
 
-version: 0.1
+version: 0.2
 plugin: protein-drug-design
 
 # ============ 端到端工作流阶段 ============
@@ -62,6 +62,28 @@ stages:
       - delta_g: "MM/GBSA(PBSA) ΔG_bind ± 块平均SEM + 残基分解"
       - mechanism: "可选深化: PROPKA/CpHMD (pKa), QM/MM (反应坐标), FEP"
     proven_case: "MM/GBSA -16.79/-13.89 kcal/mol 双态对比; 块平均 SEM 校正 4.7x 低估"
+
+  # ===== 全链路扩展阶段 (v0.2.0 收编他山科研 20 技能) =====
+  research-ideation:                # 阶段0a: 文献调研与研究构思
+    skill: scispark
+    alternatives: [sci-employee-deep-research, giiisp-paper-search-apis]
+    note: "文献型机制假设(MoA)在此; 结构/轨迹计算机制走 md-simulation-workflow 深化模块"
+  research-planning:                # 阶段0b: 采集前实验设计与预注册
+    skill: experiment-design
+    alternatives: [research-baseline-builder]
+    note: "DOE/随机化/样本量/预注册判据; MD 体系矩阵算力排期走 protein-design-workflow"
+  statistical-validation:           # 阶段5b: 采集后验证性统计
+    skill: statistical-analysis
+    note: "通用组间比较/多重比较校正; MD 收敛判据走 md-simulation-workflow 内置口径"
+  writing:                          # 阶段6: 学术写作与润色
+    skill: academic-writing
+    alternatives: [scientific-humanization]
+  review:                           # 阶段7: 论文审查与引用合规
+    skill: papercheck
+    alternatives: [thesis-audit-reviewer]
+  presentation:                     # 阶段8: 成果展示 (PPT/视频/配图)
+    skill: visual-deck-builder
+    alternatives: [practical-course-producer, manim-agent, giiisp-scientific-image-generation]
 
 # ============ 扩展接口 ============
 # 未来新增工具/算法时按此模式注册。skills 列表是唯一需要同步 plugin.json 的地方。
