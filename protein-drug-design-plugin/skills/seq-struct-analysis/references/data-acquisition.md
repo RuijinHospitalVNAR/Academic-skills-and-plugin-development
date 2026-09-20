@@ -108,7 +108,7 @@ curl -s "https://files.rcsb.org/download/7PIU.cif" -o raw/antibody/7piu.cif
 ```
 - **CoVAbDab**：date-stamped 全量 csv（含 VH/VL FASTA 序列、CDR、中和状态），一条 curl 即可入库，注意按下载日期归档。
 - **清洗范式本机参照**：`<HOME>/.trae-cn/skills/antibody-design-agent/MAGE/repo/Data cleaning/`（SAbDab detagging、CoVAbDab curation、antigen alignment 实战 notebook）——编号/去冗余逻辑可直接复用。
-- **编号工具衔接**：序列拿到后用 ANARCI 按 IMGT/Chothia/Kabat 编号再比对（工具侧, 非采集）。
+- **编号工具衔接（⚠️ VNAR 必读）**：序列编号首选 **ANARCII**（OPIG 新代工具, github.com/oxpig/ANARCII, BSD-3）：基于 transformer 语言模型对齐 germline, 对**非经典抗体（VNAR/VHH）与长 CDR3 的编号鲁棒性显著优于传统 ANARCI**（HMM, germline 覆盖不足时易误断）。原生 receptor 类型 `-t`：`antibody|tcr|vnar|vhh|shark|unknown`——**VNAR 序列必须用 `-t vnar`（或 `shark`）专用模型**, 勿用默认 antibody 模型硬标（会按经典抗体 germline 强套, CDR 划分错位）。Chothia/IMGT 双方案输出、批量 fasta 入口；已进 nf-core 官方模块（批量管线可直接调用）。传统 ANARCI 保留为备选（轻量、生态老、无需 GPU）。
 
 ### 5.2 OAS（天然抗体序列库）
 

@@ -1,6 +1,6 @@
 ---
 name: seq-struct-analysis
-description: 蛋白质序列与结构检索、获取、清洗与分析流水线。Use when 用户要鉴定蛋白家族归属或同源序列（BLAST/Jackhmmer/HHsuite/MMseqs2）、从远端库采集数据（NCBI/UniProt/RCSB/AlphaFold DB + 抗体-抗原库 SAbDab/CoVAbDab/OAS/IMGT/IEDB；序列/结构批量下载、基因组邻接区扫描）、做结构相似性检索与折叠归类（Foldseek afdb50/pdb100、TM-align/DALI）、获取与清洗 PDB/FASTA 数据（残基号修复、链提取、CIF 转换）、做多序列比对与催化基序保守性分析（MAFFT/MUSCLE/MMseqs2 + MEME/FIMO motif 发现与扫描）、或串联"序列层+结构层"双重证据回答"这个蛋白是什么/像谁/催化机器是什么"。关键词：家族鉴定、同源检索、foldseek、mmseqs2、hmmer、jackhmmer、meme、fimo、hhpred、BLAST、序列分析、结构比对、数据下载、efetch、uniprot、rcsb、afdb、sabdab、sabdab2、covabdab、oas、imgt、iedb、igblast、抗体数据库、antibody database、数据采集、TM-score、催化三联体、motif。
+description: 蛋白质序列与结构检索、获取、清洗与分析流水线。Use when 用户要鉴定蛋白家族归属或同源序列（BLAST/Jackhmmer/HHsuite/MMseqs2）、从远端库采集数据（NCBI/UniProt/RCSB/AlphaFold DB + 抗体-抗原库 SAbDab/CoVAbDab/OAS/IMGT/IEDB；序列/结构批量下载、基因组邻接区扫描）、做结构相似性检索与折叠归类（Foldseek afdb50/pdb100、TM-align/DALI）、获取与清洗 PDB/FASTA 数据（残基号修复、链提取、CIF 转换）、做多序列比对与催化基序保守性分析（MAFFT/MUSCLE/MMseqs2 + MEME/FIMO motif 发现与扫描）、做抗体编号标注（ANARCII transformer 模型，VNAR/VHH 必用 -t vnar）、或串联"序列层+结构层"双重证据回答"这个蛋白是什么/像谁/催化机器是什么"。关键词：家族鉴定、同源检索、foldseek、mmseqs2、hmmer、jackhmmer、meme、fimo、hhpred、BLAST、序列分析、结构比对、数据下载、efetch、uniprot、rcsb、afdb、sabdab、sabdab2、covabdab、oas、imgt、iedb、igblast、anarcii、anarci、numbering、抗体编号、抗体数据库、antibody database、数据采集、TM-score、催化三联体、motif。
 ---
 
 # 序列-结构分析流水线 (Sequence-Structure Analysis Pipeline)
@@ -40,6 +40,7 @@ mmseqs2 UniRef90 (中远缘)    TM-align/RMSD 定量叠合       → 家族归�
 | 定量叠合 | TM-align / Kabsch | DALI | RMSD+TM-score 报告标准 |
 | MSA 构建 | MAFFT / MMseqs2 msa | MUSCLE | 下游 HMM 的输入 |
 | motif 发现/扫描 | **MEME Suite** (meme/FIMO/MAST) | 正则扫描 | meme de novo 发现保守基序（无需预设 pattern），FIMO/MAST 用已知矩阵扫 query；结果仍需结构距离二次验证 |
+| 抗体/VNAR 编号 | **ANARCII** (transformer, `-t vnar`) | 传统 ANARCI (HMM) | 语言模型对齐 germline，非经典抗体与长 CDR3 更鲁棒；VNAR 必用专用模型，勿用默认 antibody 模型硬套 |
 | 抗体库本地缓存 | SAbDab2 训练集 (splits_final, 15.6k 实例) | Zenodo 半年新版 | 路径与守卫见 data-acquisition.md §5.0 |
 | 远端采集 | NCBI efetch / UniProt REST / RCSB / AFDB | — | 检索得 ID → 拉原文；命令与限速见 data-acquisition.md |
 
@@ -51,6 +52,7 @@ mmseqs2 UniRef90 (中远缘)    TM-align/RMSD 定量叠合       → 家族归�
 | Foldseek 模式 | 在线 API 必须 `-F "mode=3diaa"`（all/tmalign 均报 Mode 验证错）；AFDB50 本地下载被墙时用在线 API（~1 分钟） |
 | Foldseek 内部编号 | 命中模板残基号有 offset（3h04 从 3 起，内部号 +2），叠合前先核对 |
 | BLAST e-value | 家族归属要报 identity + coverage + bit score 三元组，勿只报 e-value（swissprot 零命中 ≠ 无同源，可能是缺人工注释） |
+| 抗体编号 | VNAR/VHH 序列编号首选 **ANARCII** transformer 且用 `-t vnar`（或 `shark`）专用模型——默认 antibody 模型按经典 germline 强套会致 CDR 划分错位（规范见 data-acquisition.md §5.1） |
 | 基序判定 | 催化基序（如 GxSxG nucleophile elbow、HGGG oxyanion hole、GxGxxG Rossmann）用正则或 MEME de novo 发现 + 结构距离双重验证；单凭序列 motif 会误判（GGGL 看似 GGGxG 但第 6 位非 G 不构成经典模体，A9 实证） |
 | 折叠-功能矛盾 | 序列注释（如 "α/β hydrolase"）与下游功能（如氧化酶）冲突时，用结构检索 Top 命中的家族分布 + 操纵子基因组上下文（邻接基因功能耦合）做第三方仲裁 |
 
