@@ -62,7 +62,8 @@ ticket 提交与轮询见 [pipeline-playbook.md](pipeline-playbook.md) Step 2b�
 
 | 库 | 内容 | 典型用途 | 更新 | 获取方式 |
 |---|---|---|---|---|
-| **SAbDab** | 抗体-抗原复合物实验结构 (CDR 注释/编号) | 结构模板、表位统计、CDR 构象库 | weekly | OPIG 网页 summary 表 + 结构按 PDB 号取 |
+| **SAbDab2** | 抗体-抗原结构总库 (SAbDab 重建版, 稳定 SAbDab2 ID, IMGT 编号, VNAR/SD-H 等 6 类 instance) | 结构模板、表位统计、序列检索 | weekly | sabdab2.opig.stats.ox.ac.uk (网页检索/批量导出) |
+| **SAbDab2 AI/ML 训练集** ⭐首选 | 清洗后结构+序列+split (半年度版) | ML 训练、CDR/表位统计、模板库 | 每 6 个月 | Zenodo record 20083995; **本地已有缓存 (见 5.0)** |
 | **Thera-SAbDab** | 治疗性抗体 (WHO INN) × 结构/序列映射 | 临床抗体基准、专利对照 | weekly | OPIG 网页 csv |
 | **CoVAbDab** | 冠状病毒抗体序列 (VH/VL 全序列) + 结构映射 | 冠状病毒抗体工程、逃逸分析 | ~weekly | OPIG 网页 date-stamped csv |
 | **OAS** | 天然抗体序列库 (paired/unpaired 库) | 人源化参照、CDR 统计、语言模型训练语料 | 库级版本 | OPIG 网页 unit 级下载 (TB 级, 按需取) |
@@ -70,15 +71,40 @@ ticket 提交与轮询见 [pipeline-playbook.md](pipeline-playbook.md) Step 2b�
 | **IEDB** | 表位 (B/T 细胞) + 抗原 + 测定数据 | 抗原表位注释、免疫原性先验 | 库级版本 | REST API / 网页导出 csv |
 | **AbDb / NanoLAS** (备选) | 编号化抗体结构 / 纳米抗体 | 特定场景 | — | 站点导出 |
 
-### 5.1 SAbDab / Thera-SAbDab / CoVAbDab（OPIG 系）
+### 5.0 本地缓存（首选起点）：SAbDab2 AI/ML 训练集
+
+> 命名澄清：该数据常被口述为"zando"，检索确认官方名称为 **SAbDab2 clean training data**（Capel et al. 2026, bioRxiv doi 10.64898/2026.06.16.732554；数据 Zenodo record 20083995，每 6 个月更新）。
+
+本地缓存（实证 2026-09-20 盘点）：
+
+```text
+<SABDAB2_PROJECT_DIR>/data/antibody_antigen_complexes/splits/splits_final/
+├── ab_split.csv        15,641 行  抗体实例级: INSTANCE/PDB_ID/SABDAB_ID/H/L 链 ID/方法/分辨率/
+│                                 Hseq/Lseq(实测+expected)/IMGT numbering 列表/CDRH1-3+CDRL1-3/
+│                                 聚类去冗列(cdrh3_cluster 等)/ab_split(train|val|test)
+├── abag_split.csv      15,641 行  抗原-抗体配对级: 抗原链 ID/类型(PROTEIN/SUGAR/PEPTIDE/ION)/
+│                                 抗原序列与解析区间/ag_split 划分
+├── ab_split_sd.csv     3,414 行   非冗余变体 split (基准/低冗余场景用)
+├── abag_split_sd.csv   3,414 行   同上, 配对级
+└── pdb_0000XXXX_X_Y.cif  8,846 个 (1.9GB)  清洗后复合物结构, 文件名=重构PDB ID_抗体链_抗原链
+```
+
+使用守卫：
+- **版本锚定**：CSV 内 `SABDABupdate` 列记数据版本（本地版=20260430）；半年新版发布后勿混用两个版本的 split（防 train/test 泄漏）。
+- **链名已标准化**：cif 内链命名与 CSV 的 H/L/ag 列对应，无需再做 SAbDab 老式的链映射清洗。
+- **cif 覆盖度**：8,846 cif < 15,641 行——CSV 行含未解析/未下载实例，用前先按 INSTANCE 过滤本地实际存在文件。
+- **低冗余分析用 `_sd`**：跨抗体统计（CDR 构象、表位富集）用 `_sd` 变体防同源膨胀；全量 split 用于 ML 训练。
+- **单域抗体**：VNAR/SD-H/SD-L 类型在该库有原生 instance type 标注（SAbDab2 新特性），比老 SAbDab 的 VHH 标记更可靠。
+
+### 5.1 SAbDab2 / Thera-SAbDab / CoVAbDab（OPIG 系）
 
 ```bash
-# ⚠️ OPIG 端点近年从 sabdab 迁移到 newsabdab, 以下载页面列出的最新链接为准 (勿硬编码旧路径)
-SABDAB="https://opig.stats.ox.ac.uk/webapps/newsabdab/sabdab"
-# 1) 全量 summary (pdb 编号 + 抗原 + VHH/nanobody 标记 + CDR) -> 建本地索引
-curl -sL --max-time 30 "$SABDAB/summary/" -o raw/antibody/sabdab_summary_page.html   # 页面内取最新 tsv 链接
-# 2) 按 PDB 号选择性取结构 (summary 索引驱动; 全量 zip 数十 GB 勿整包拉)
-curl -s "https://files.rcsb.org/download/7PIU.cif" -o raw/antibody/7piu.cif           # 结构本体走 RCSB (§3)
+# SAbDab2 新站 (sabdab2.opig.stats.ox.ac.uk): 网页检索/按序列查/按 CDR 查, 支持自定义批量导出
+# ⚠️ 旧 opig webapps/newsabdab 端点迁移期已过, 一律以 sabdab2 新站为准; URL 勿硬编码旧路径
+# AI/ML 训练集 (与本地缓存同源, 每 6 个月更新):
+curl -sL --max-time 30 "https://zenodo.org/records/20083995" -o raw/antibody/sabdab2_zenodo_page.html  # 页面内取最新版文件链接
+# 按 PDB 号取结构本体 (summary/训练集索引驱动):
+curl -s "https://files.rcsb.org/download/7PIU.cif" -o raw/antibody/7piu.cif
 ```
 - **CoVAbDab**：date-stamped 全量 csv（含 VH/VL FASTA 序列、CDR、中和状态），一条 curl 即可入库，注意按下载日期归档。
 - **清洗范式本机参照**：`<HOME>/.trae-cn/skills/antibody-design-agent/MAGE/repo/Data cleaning/`（SAbDab detagging、CoVAbDab curation、antigen alignment 实战 notebook）——编号/去冗余逻辑可直接复用。

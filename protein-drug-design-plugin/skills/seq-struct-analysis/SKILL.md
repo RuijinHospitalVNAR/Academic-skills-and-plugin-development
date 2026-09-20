@@ -1,6 +1,6 @@
 ---
 name: seq-struct-analysis
-description: 蛋白质序列与结构检索、获取、清洗与分析流水线。Use when 用户要鉴定蛋白家族归属或同源序列（BLAST/Jackhmmer/HHsuite/MMseqs2）、从远端库采集数据（NCBI/UniProt/RCSB/AlphaFold DB + 抗体-抗原库 SAbDab/CoVAbDab/OAS/IMGT/IEDB；序列/结构批量下载、基因组邻接区扫描）、做结构相似性检索与折叠归类（Foldseek afdb50/pdb100、TM-align/DALI）、获取与清洗 PDB/FASTA 数据（残基号修复、链提取、CIF 转换）、做多序列比对与催化基序保守性分析（MAFFT/MUSCLE/MMseqs2 + MEME/FIMO motif 发现与扫描）、或串联"序列层+结构层"双重证据回答"这个蛋白是什么/像谁/催化机器是什么"。关键词：家族鉴定、同源检索、foldseek、mmseqs2、hmmer、jackhmmer、meme、fimo、hhpred、BLAST、序列分析、结构比对、数据下载、efetch、uniprot、rcsb、afdb、sabdab、covabdab、oas、imgt、iedb、igblast、抗体数据库、antibody database、数据采集、TM-score、催化三联体、motif。
+description: 蛋白质序列与结构检索、获取、清洗与分析流水线。Use when 用户要鉴定蛋白家族归属或同源序列（BLAST/Jackhmmer/HHsuite/MMseqs2）、从远端库采集数据（NCBI/UniProt/RCSB/AlphaFold DB + 抗体-抗原库 SAbDab/CoVAbDab/OAS/IMGT/IEDB；序列/结构批量下载、基因组邻接区扫描）、做结构相似性检索与折叠归类（Foldseek afdb50/pdb100、TM-align/DALI）、获取与清洗 PDB/FASTA 数据（残基号修复、链提取、CIF 转换）、做多序列比对与催化基序保守性分析（MAFFT/MUSCLE/MMseqs2 + MEME/FIMO motif 发现与扫描）、或串联"序列层+结构层"双重证据回答"这个蛋白是什么/像谁/催化机器是什么"。关键词：家族鉴定、同源检索、foldseek、mmseqs2、hmmer、jackhmmer、meme、fimo、hhpred、BLAST、序列分析、结构比对、数据下载、efetch、uniprot、rcsb、afdb、sabdab、sabdab2、covabdab、oas、imgt、iedb、igblast、抗体数据库、antibody database、数据采集、TM-score、催化三联体、motif。
 ---
 
 # 序列-结构分析流水线 (Sequence-Structure Analysis Pipeline)
@@ -12,7 +12,7 @@ description: 蛋白质序列与结构检索、获取、清洗与分析流水线�
 - 未知蛋白的家族归属 / 功能注释（序列+结构双证据）
 - 同源序列收集（建 MSA / 找催化基序 / 收 AF3 templates）
 - 结构近邻检索、实验结构锚点挑选（如 3h04 之于 A9）
-- 抗体-抗原数据采集（SAbDab 复合物结构、CoVAbDab/OAS 抗体序列、IMGT germline、IEDB 表位）；通用数据清洗（PDB/CIF/FASTA 坑）
+- 抗体-抗原数据采集（SAbDab2 及其 AI/ML 清洗训练集——本地已有缓存、CoVAbDab/OAS 抗体序列、IMGT germline、IEDB 表位）；通用数据清洗（PDB/CIF/FASTA 坑）
 
 ## 1. 标准流水线（三步定案法）
 
@@ -40,6 +40,7 @@ mmseqs2 UniRef90 (中远缘)    TM-align/RMSD 定量叠合       → 家族归�
 | 定量叠合 | TM-align / Kabsch | DALI | RMSD+TM-score 报告标准 |
 | MSA 构建 | MAFFT / MMseqs2 msa | MUSCLE | 下游 HMM 的输入 |
 | motif 发现/扫描 | **MEME Suite** (meme/FIMO/MAST) | 正则扫描 | meme de novo 发现保守基序（无需预设 pattern），FIMO/MAST 用已知矩阵扫 query；结果仍需结构距离二次验证 |
+| 抗体库本地缓存 | SAbDab2 训练集 (splits_final, 15.6k 实例) | Zenodo 半年新版 | 路径与守卫见 data-acquisition.md §5.0 |
 | 远端采集 | NCBI efetch / UniProt REST / RCSB / AFDB | — | 检索得 ID → 拉原文；命令与限速见 data-acquisition.md |
 
 ## 3. 高频坑速查

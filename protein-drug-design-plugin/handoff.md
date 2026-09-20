@@ -53,6 +53,15 @@
 1. **抗体-抗原库采集补齐（用户指出缺口）**：data-acquisition.md 新增 §5"抗体-抗原专用库"——SAbDab(结构+CDR 注释, weekly)/Thera-SAbDab(WHO INN)/CoVAbDab(序列全量 csv)/OAS(天然库 unit 级, TB 级按需)/IMGT germline+IgBLAST(NCBI FTP 稳定端点)/IEDB(REST+全量导出)/AbDb/NanoLAS 备选；OPIG 端点标注 ⚠️ 以站点最新为准（newsabdab 迁移期勿硬编码）；结构本体走 RCSB 避免整包拉取；清洗范式挂接本机 MAGE repo notebook（SAbDab detagging/CoVAbDab curation）；ANARCI 衔接说明。原"采集规范"§5 改 §6，补 raw/antibody/ 分目录规则。SKILL.md 触发词补 sabdab/covabdab/oas/imgt/iedb/igblast 等。
 2. 同步 GitHub。
 
+## 更新 (2026-09-20 第五轮)
+
+1. **SAbDab2 本地缓存盘点与文档化（用户指出"zando"清洗库）**：
+   - 命名澄清：检索无 "ZANDO" 抗体库；本地数据经文件布局/术语（INSTANCE/TYPE=FAB/SABDABupdate=20260430/pdb_0000xxxx_H_L 命名）比对确认为 **SAbDab2 官方 AI/ML 清洗训练集**（Capel et al. 2026 bioRxiv 10.64898/2026.06.16.732554；Zenodo 20083995，半年更新）。
+   - 本地规模：ab/abag_split.csv 各 15,641 行 + _sd 非冗余变体 3,414 行 + 8,846 清洗 cif (1.9GB)；抗原类型 PROTEIN 3698/SUGAR 821/PEPTIDE 734 等。路径 VNAR-antigen-feature-analysis/data/antibody_antigen_complexes/splits/splits_final/。
+   - data-acquisition.md：§5.0 新增本地缓存小节（布局+四条守卫：版本锚定防 split 泄漏/链名已标准化/cif 覆盖度过滤/低冗余用 _sd + VNAR 原生 instance type）；选型矩阵 SAbDab→SAbDab2 升级并标训练集为⭐首选；5.1 更新为 sabdab2 新站 + Zenodo 下载（旧 newsabdab 路径删除）。
+   - SKILL.md 触发词补 sabdab2，选型表补本地缓存行。
+2. 同步 GitHub。
+
 ## 下一步计划
 
 1. [ ] 实测触发：插件安装/注册后，用典型请求（"做这个蛋白的 MD"、"A9 是什么家族"）验证技能触发与加载链路。
