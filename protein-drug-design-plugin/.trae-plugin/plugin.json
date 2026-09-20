@@ -1,6 +1,6 @@
 {
   "name": "protein-drug-design",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "displayName": "蛋白质药物设计 Skills",
   "displayNameEn": "Protein Drug Design Skills",
   "description": "蛋白质药物设计与科研全链路技能插件（43 项）：计算主线（序列/结构分析、AF3 批量预测、MD 模拟、结合能）+ 文献/构思/实验设计/统计/学术写作/论文审查/PPT视频配图 + nature-skills 全套（中英对照精读、PaperCard、CNS 引文核实、专利草稿、实验日志等）。",

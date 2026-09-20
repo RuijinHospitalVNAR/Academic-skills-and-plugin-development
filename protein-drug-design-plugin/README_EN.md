@@ -2,9 +2,10 @@
 
 English | [简体中文](README.md)
 
-A **full-chain** protein drug design skill plugin built on the Tashan Research Agent Skills framework (v0.3.0, **43 skills**):
+A **full-chain** protein drug design skill plugin built on the Tashan Research Agent Skills framework (v0.4.0, **44 skills**):
 
 - **Computation mainline** (4 in-house skills, empirically distilled): **sequence/structure identification → AI structure prediction & batch analysis → molecular dynamics validation → binding energy & mechanism deepening**
+- **Management & meta**: skill-manager (skill lifecycle governance)
 - **Full-chain extensions** (39 adopted skills): literature research → research ideation → pre-collection experiment design & preregistration → post-collection statistical analysis → academic writing → manuscript review → presentation (slides/video/figures/patent drafts/experiment logs)
 
 ## Directory Layout
@@ -14,13 +15,14 @@ protein-drug-design-plugin/
 ├── .trae-plugin/plugin.json          # Plugin manifest (entry declaration)
 ├── workflow.yaml                     # Workflow config (11 stages/data contracts/extension points)
 ├── install.sh                        # Multi-IDE / desktop-agent installer
+├── data/                             # Skill ledger + append-only audit log (skill-manager)
 ├── templates/skill-template/         # New-skill skeleton template
-└── skills/                           # 43 skills
+└── skills/                           # 44 skills (incl. skill-manager)
     ├── (computation mainline, 4)     # seq-struct-analysis / structure-prediction-analysis /
     │                                 # md-simulation-workflow / protein-design-workflow
+    ├── (management, 1)               # skill-manager (add/merge/remove + ledger & audit)
     ├── (Tashan Research, 19)         # academic-writing / scispark / experiment-design /
-    │                                 # statistical-analysis / papercheck / visual-deck-builder /
-    │                                 # manim-agent / practical-course-producer / ...
+    │                                 # statistical-analysis / papercheck / visual-deck-builder / ...
     └── (nature-skills, 20)           # nature-writing / nature-reviewer / nature-paper-card /
                                       # nature-figure / nature-paper-to-patent / ...
 ```
@@ -35,6 +37,10 @@ protein-drug-design-plugin/
 | **structure-prediction-analysis** | AF3/Protenix/OpenDDE batch inference (MSA-first + multi-GPU round-robin + slim transfer); dual-axis quadrant analysis (targeted epitope + membrane-side accessibility) | MC2R/MC4R VNAR project (151 candidates × 100 seeds) |
 | **md-simulation-workflow** | Full AMBER pipeline (BCC/RESP parameterization → tleap triple-guards → equilibration/production → cpptraj); convergence dual-criteria (core-region RMSD + block-average SEM); five-engine comparison; CpHMD/QM/MM/MM-GBSA protocols | A9 uricase + 48-system 500–769ns extension |
 | **protein-design-workflow** | Task routing, 11-stage data contracts, compute-scheduling baselines, extension onboarding | Orchestration layer |
+
+### Management & meta
+
+**skill-manager** — skill lifecycle governance: semi-automatic add (compare-then-decide absorb/merge/reject), ledger + append-only audit log, single & batch modes (see dedicated section below).
 
 ### Full-chain extensions (39 adopted)
 
@@ -77,11 +83,20 @@ The repo ships `install.sh`, which copies `skills/` into each tool's skill direc
 | OpenClaw / desktop agents | `bash install.sh openclaw` | `~/.agents/skills` (agents-skills spec) |
 | Help | `bash install.sh list` | — |
 
-Rationale: the Agent Skills spec (agentskills.io) is the emerging cross-tool standard; tools differ only in skill-directory location. `install.sh` detects and copies; for Cursor/Windsurf (no native loader) it prints a pointer line to add to project rules. Community CLI alternative: `npx skills add RuijinHospitalVNAR/Academic-skills-and-plugin-development --skill '*' --yes --copy`.
+Rationale: the Agent Skills spec (agentskills.io) is the emerging cross-tool standard; tools differ only in skill-directory location. Cursor/Windsurf have no native loader — the script prints a pointer line to add to project rules. Community CLI alternative: `npx skills add RuijinHospitalVNAR/Academic-skills-and-plugin-development --skill '*' --yes --copy`.
 
 ### Skill visibility & language strategy
 
 Skills have two layers: **description** (always-on in the system prompt, decides triggering — what the audience sees first) is fully bilingual (Chinese skills carry an `EN:` summary line; English skills carry Chinese trigger aliases). **Bodies & references** (loaded on trigger) remain primarily Chinese: the provenance records are native Chinese and mechanical translation would distort them; heavy references will be English-localized incrementally as needed.
+
+## Skill Lifecycle Management (skill-manager)
+
+The built-in `skill-manager` skill governs add/merge/remove for all plugin skills:
+
+- **ADD (semi-automatic)**: signal capture (≥2 recurrences / >1h debugging / user-named) → draft generation (asks the user at key points) → `compare.py` similarity vs existing skills (description Jaccard + body bigram + trigger conflicts) → three-way decision (**absorb / merge / reject**) → `ledger.py` registration
+- **REMOVE**: signals (platform sunset / long-untriggered / superseded) → user confirmation → automatic tar backup + three-location cleanup + workflow.yaml reference removal
+- **Traceable & auditable**: `data/skills-ledger.json` (full decision history per skill) + `data/audit-log.jsonl` (**append-only**, with user_confirmed flag)
+- **Single & batch modes**: individual commands or `ledger.py batch <file>`; `--dry-run` supported
 
 ## Data Sources & Acknowledgements
 
@@ -97,19 +112,16 @@ Skills have two layers: **description** (always-on in the system prompt, decides
 | Tashan Research (tashan-research-skills) | 19 adopted skills (original plugin uninstalled; backup kept locally) | UCAS Tashan (tashan.ac.cn) |
 | nature-skills | 20 adopted skills | github.com/Yuan1z0825/nature-skills (Apache-2.0) |
 
-## Skill Lifecycle Management (skill-manager)
-
-The built-in `skill-manager` skill governs add/merge/remove for all plugin skills: semi-automatic generation from work lessons (asking the user at key decision points) → `compare.py` similarity vs existing skills → absorb/merge/reject per preset thresholds → `ledger.py` ledger + append-only audit log; removal auto-backups (tar) and cleans all three locations. Single and batch modes; fully traceable and auditable.
-
 ## Extending
 
-- **Add a skill**: copy `templates/skill-template/` → `skills/<name>/` → write trigger-only frontmatter → register the stage in `workflow.yaml` → add keywords to `plugin.json`.
+- **Add a skill**: go through the skill-manager flow, or manually copy `templates/skill-template/` → trigger-only frontmatter → register in `workflow.yaml` → add keywords to `plugin.json` → `ledger.py add`.
 - **Add an MD engine**: register in `md-simulation-workflow/references/md-engine-comparison.md`; zero orchestrator changes.
 - **Shared conventions**: official tools first; completion judged by finalization markers, never file existence; all parameters carry provenance; one handoff per project.
 
 ## Changelog
 
-- **0.3.0** (2026-09-20): adopted the complete nature-skills suite (20 skills, bilingual descriptions); added multi-IDE/desktop installer `install.sh`; removed platform-bound world-threads-entry. 43 skills total.
+- **0.4.0** (2026-09-20): added the skill-manager lifecycle module (semi-automatic generation → compare-based absorb/merge/reject → ledger + audit; single/batch modes; all 44 skills registered).
+- **0.3.0** (2026-09-20): adopted the complete nature-skills suite (20 skills, bilingual descriptions); added multi-IDE/desktop installer `install.sh`; removed platform-bound world-threads-entry.
 - **0.2.0** (2026-09-20): absorbed all 20 Tashan Research skills (4 boundary statements), 6 full-chain stages registered; original plugin uninstalled.
 - **0.1.1** (2026-09-20): data-acquisition module (general + antibody–antigen + local SAbDab2 cache); ANARCII guidelines; endpoint sanitization.
 - **0.1.0** (2026-09-20): initial skeleton.
