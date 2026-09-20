@@ -61,7 +61,7 @@
 | 资产 | 路径 | 状态 |
 |---|---|---|
 | Amber22 (sander/pmemd.cuda/cpptraj/MMPBSA.py) | <AMBER_HOME> | ✅ 已验证 |
-| AmberTools23 env (远程 rcdb) | <REMOTE_HOME>/anaconda3/envs/AmberTools23/bin/python | ✅ 已验证 |
+| AmberTools23 env (远程 rcdb) | <REMOTE_PYTHON> (AmberTools23 env) | ✅ 已验证 |
 | 远端 8×3090 (GPU0 被占, GPU5 MD 专用勿占) | user@<REMOTE_HOST>:<REMOTE_PORT> (内网地址脱敏, 见本地 handoff) | ⚠️ 共享资源，先巡检 |
 | gmx 任务参照（他人项目, GLP1R） | /data/hst/GLP1R-* | 只读参考 |
 | OpenMM 技能 | superpowers:molecular-dynamics | 备选引擎文档 |

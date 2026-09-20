@@ -4,7 +4,7 @@
 > 素材来源（只读引用，不修改源项目）：
 > - A9 尿酸酶项目：<A9_PROJECT_DIR>/handoff.md
 > - SH3/HCG MD 趋势：<MD_PROJECT_DIR>/handoff.md
-> - GPCR 抗体设计（structure-prediction-analysis 技能出处）：<GLOBAL_HANDOFF>
+> - GPCR 抗体设计（structure-prediction-analysis 技能出处）：<LOCAL_DIR>
 
 ## 已完成 (2026-09-20)
 
@@ -41,7 +41,7 @@
    - commit 13f6b49 已完成（19 文件, 1225 行, "Add protein-drug-design plugin v0.1.1"）；
    - ⚠️ push 被拒：<OLD_DEPLOY_KEY> 密钥对目标仓库只读（GitHub deploy key 仓库绑定）；
    - 已生成专用密钥对 <DEPLOY_KEY_PATH>（ed25519, 无口令），公钥已交用户添加为该仓库 Deploy key（需勾选 Allow write access）；
-   - 用户添加后执行: GIT_SSH_COMMAND="ssh -i <DEPLOY_KEY_PATH> -o IdentitiesOnly=yes" git push -u origin main（在 <GIT_CLONE_DIR> 下）。
+   - 用户添加后执行: GIT_SSH_COMMAND="ssh -i <DEPLOY_KEY_PATH>" git push -u origin main（在 <GIT_CLONE_DIR> 下）。
 
 ## 更新 (2026-09-20 第三轮)
 
@@ -70,7 +70,7 @@
 ## 更新 (2026-09-20 第八轮 · v0.2.0)
 
 1. **全量收编他山科研 20 技能**（用户确认插件定位为蛋白设计+写作全链路，14 项不再视为噪音）：
-   - 复制 20 技能入 skills/（总量 24）；备份 <BACKUP_DIR>/tashan-research-skills-backup-20260920.tar.gz (1.7MB)。
+   - 复制 20 技能入 skills/（总量 24）；备份 <BACKUP_FILE> (1.7MB)。
    - 4 个触发面冲突技能加边界声明（description 末尾）：experiment-design（MD矩阵排期→protein-design-workflow）、statistical-analysis（MD收敛判据→md-simulation-workflow）、scispark（计算机制深化→md-simulation-workflow）、research-baseline-builder（跨阶段路由→protein-design-workflow）。
    - plugin.json v0.2.0（全链路描述+32关键词）；workflow.yaml 注册 6 个全链路阶段（research-ideation/research-planning/statistical-validation/writing/review/presentation，含 alternatives），stages 总数 11。
 2. **卸载他山插件**：官方市场入口无法脚本调用，按兜底路径执行：tar 备份 → rm <HOME>/.trae-cn/plugins/trae-remote-official/tashan-research-skills/ → 清 plugin-config.json 的启用条目 → 清 installed-plugins.json 的市场条目（python json 编辑）。验证：目录不存在+两 json 无 tashan 残留。
@@ -101,6 +101,15 @@
    - papercheck 触发词 TaShan-PaperChecker→PaperCheck（保触发面）；research-dream "他山式分身"→"科研数字分身"。
    - **保留**：handoff 历史记录（档案性质）；assets/paperchecker-rules 内 vendored 上游 README/CHANGELOG/front 目录名 tashan-ui（目录名被 app/main.py:62-64 代码引用，改名会致 /ui 404；vendored 项目按惯例保留原样）。
 2. 残留检查：除 vendored paperchecker-rules 目录内部与 handoff 历史外，grep 无他山/tashan 字样。GitHub 已同步推送。
+
+## 更新 (2026-09-21 第十二轮 · 安全审计)
+
+1. **全库安全审计修复**（审计发现 2 类高危）：
+   - 高危1：sci-employee-deep-research 的自建 Deep Research 服务公网端点（IP:18000）在 SKILL.md 与 scripts/stream_deep_research.py 两处 -> 全部占位符化（第十一轮清理未覆盖此技能，属残留）。
+   - 高危2：handoff.md 含 deploy key 无口令私钥路径 + 完整推送命令 + 本机拓扑 -> 全文脱敏（密钥路径/用户名/项目绝对路径/GPU 主机名/公钥串全部占位符化）。
+   - 中危同步处理：rcdb 账号->user@、<AMBER_HOME>/<MODEL_DIR>/<SAbDab2_CACHE_DIR> 等路径占位符化、plugin.json author 改组织名、仓库根新增 .gitignore（密钥/凭证/本地产物模式）。
+2. **deploy key 轮换**：旧钥（无口令且路径已入历史）移入隔离目录标记废弃；生成新钥待用户在 GitHub 添加。审计确认：私钥本体从未入库、无真实 token/密码/手机号/私钥块，本地端口与 vendored 第三方数据不算敏感。
+3. 历史清理建议（待用户决策）：旧提交历史中仍有脱敏前的 handoff 与公网 IP；若需彻底清除需 git filter-repo 重写历史 + force push（会改提交哈希），或接受"已轮换密钥+IP已失效"现状。
 
 ## 下一步计划
 

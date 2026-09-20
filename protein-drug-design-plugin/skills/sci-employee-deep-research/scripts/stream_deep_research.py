@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import Any, Iterable, Iterator
 
 
-DEFAULT_ENDPOINT = "http://<DEEP_RESEARCH_HOST>:18000/api/research/ask"
+DEFAULT_ENDPOINT = "http://<DEEP_RESEARCH_HOST>:<DEEP_RESEARCH_PORT>/api/research/ask"
 AUTH_URL = "https://giiisp.com/#/mcp/authenticate"
 INTERFACE_UNAVAILABLE_ACTION = (
     "Deep Research 接口不可用或未配置；请检查服务地址/网络/后端状态。"

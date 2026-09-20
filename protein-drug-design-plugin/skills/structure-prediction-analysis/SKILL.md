@@ -52,7 +52,7 @@ description: "蛋白质结构预测批量部署与结果分析技巧集（AF3/Pr
 - `--num_diffusion_samples` 官方默认 5，**必须显式 =1**（否则磁盘与耗时 x5）
 - binder 设计链（如 VNAR）**用空 MSA**（设计序列无同源，且省 25MB/条）；受体链 MSA/模板整段复用
 - 权重路径 `--model_dir`（本项目 `<MODEL_DIR>`）
-- 批量生成脚本参考：`<LOCAL_SCRIPTS_DIR>/build_af3_aneo_100seed_all.py`（binder 从 model.pdb H 链提取、cofold-验证 gate=model.cif 存在、同靶序列去重、manifest.csv 台账）
+- 批量生成脚本参考：`scripts/ (插件仓库相对路径; 实机部署时替换为本机 scripts 目录)build_af3_aneo_100seed_all.py`（binder 从 model.pdb H 链提取、cofold-验证 gate=model.cif 存在、同靶序列去重、manifest.csv 台账）
 
 ### 2.2 传输瘦身（同靶批量场景必备）
 
@@ -172,7 +172,7 @@ Aureka 开源 Drug Design Engine（AF3 系扩散模型，Python 3.11-3.13，本�
 
 ## 5. AF3 大规模结果分析：双轴四象限管线
 
-主脚本 `<LOCAL_SCRIPTS_DIR>/af3_dualaxis_postprocess.py`（配套 `build_region_cache.py`、`validate_epitope_side.py`）。
+主脚本 `scripts/ (插件仓库相对路径; 实机部署时替换为本机 scripts 目录)af3_dualaxis_postprocess.py`（配套 `build_region_cache.py`、`validate_epitope_side.py`）。
 
 ### 5.1 标准模式（无目标 epitope）
 
@@ -193,7 +193,7 @@ python3 af3_dualaxis_postprocess.py --target mc4r \
   （seed 目录用下划线、summary 单数 confidence、cif 带任务名前缀——三处都和 AF3 不同）；
   输入 json 是 job list（转换脚本 `af3_to_opendde_json.py` 产出，binder 空 MSA 链自动生成 query-only a3m），
   后处理已适配双格式（list→proteinChain，dict→protein）
-- **双引擎交叉比较**：`<LOCAL_SCRIPTS_DIR>/cross_compare_af3_opendde.py --af3-dir <AF3结果目录> --od-dir <OpenDDE结果目录>
+- **双引擎交叉比较**：`scripts/ (插件仓库相对路径; 实机部署时替换为本机 scripts 目录)cross_compare_af3_opendde.py --af3-dir <AF3结果目录> --od-dir <OpenDDE结果目录>
   --targets mc2r,mc4r --out <比较目录>`——L1 seed 级配对 ipTM（两引擎同 seeds）+ L2 候选级
   iptm_max/posdom_lb 相关性与 rank 漂移 + L3 象限交叉表 + 引擎分歧清单；自比较（af3-dir=od-dir）
   必须输出全对角线 ρ=1.0 作管线自检。⚠️ samples/units/summary 三表 candidate 列格式不一
@@ -239,9 +239,9 @@ python3 af3_dualaxis_postprocess.py --target mc2r \
 
 | 资产 | 路径 | 作用 |
 |---|---|---|
-| 双轴四象限分析 | `<LOCAL_SCRIPTS_DIR>/af3_dualaxis_postprocess.py` | 标准模式 + targeted 模式主分析 |
-| 区域/正构口袋缓存 | `<LOCAL_SCRIPTS_DIR>/build_region_cache.py` → `results/af3_dualaxis/region_cache_*.json` | 实验结构+UniProt 实证的正构口袋/可及残基 |
-| 膜侧几何判定 | `<LOCAL_SCRIPTS_DIR>/validate_epitope_side.py` | 参考系构建 + binder 胞外/膜/胞内投影 |
-| 100-seed 批量输入 | `<LOCAL_SCRIPTS_DIR>/build_af3_aneo_100seed_all.py` | 候选枚举→json 批量生成 |
-| 传输瘦身 | `<LOCAL_SCRIPTS_DIR>/build_af3_aneo_100seed_slim.py` | MSA/模板拆包 75x 压缩 |
+| 双轴四象限分析 | `scripts/ (插件仓库相对路径; 实机部署时替换为本机 scripts 目录)af3_dualaxis_postprocess.py` | 标准模式 + targeted 模式主分析 |
+| 区域/正构口袋缓存 | `scripts/ (插件仓库相对路径; 实机部署时替换为本机 scripts 目录)build_region_cache.py` → `results/af3_dualaxis/region_cache_*.json` | 实验结构+UniProt 实证的正构口袋/可及残基 |
+| 膜侧几何判定 | `scripts/ (插件仓库相对路径; 实机部署时替换为本机 scripts 目录)validate_epitope_side.py` | 参考系构建 + binder 胞外/膜/胞内投影 |
+| 100-seed 批量输入 | `scripts/ (插件仓库相对路径; 实机部署时替换为本机 scripts 目录)build_af3_aneo_100seed_all.py` | 候选枚举→json 批量生成 |
+| 传输瘦身 | `scripts/ (插件仓库相对路径; 实机部署时替换为本机 scripts 目录)build_af3_aneo_100seed_slim.py` | MSA/模板拆包 75x 压缩 |
 | OpenDDE 仓库 | `<OPENDDE_DIR>`（venv 已装, CLI: `.venv/bin/opendde`） | pred/msa/prep/doctor |

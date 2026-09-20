@@ -78,7 +78,7 @@ ticket 提交与轮询见 [pipeline-playbook.md](pipeline-playbook.md) Step 2b�
 本地缓存（实证 2026-09-20 盘点）：
 
 ```text
-<SABDAB2_PROJECT_DIR>/data/antibody_antigen_complexes/splits/splits_final/
+<SAbDab2_CACHE_DIR>/
 ├── ab_split.csv        15,641 行  抗体实例级: INSTANCE/PDB_ID/SABDAB_ID/H/L 链 ID/方法/分辨率/
 │                                 Hseq/Lseq(实测+expected)/IMGT numbering 列表/CDRH1-3+CDRL1-3/
 │                                 聚类去冗列(cdrh3_cluster 等)/ab_split(train|val|test)

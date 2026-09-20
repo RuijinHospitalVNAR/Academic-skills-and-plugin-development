@@ -1,0 +1,7 @@
+# local-only artifacts (never push)
+**/handoff.local.md
+**/downloaded/
+**/credentials*
+*.pem
+*_deploy
+*_deploy.pub

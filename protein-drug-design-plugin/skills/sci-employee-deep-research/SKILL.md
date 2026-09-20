@@ -23,7 +23,7 @@ description: 调用或模拟 Deep Research 流程，把论文检索、关键词�
 Deep Research 接口：
 
 ```text
-POST http://<DEEP_RESEARCH_HOST>:18000/api/research/ask
+POST http://<DEEP_RESEARCH_HOST>:<DEEP_RESEARCH_PORT>/api/research/ask
 ```
 
 请求体核心字段：
