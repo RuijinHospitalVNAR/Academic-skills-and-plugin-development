@@ -1,0 +1,12 @@
+NPT 平衡 800ps, 定密度
+ 运行: pmemd.cuda -O -i 03_equil_npt.in -o equil.out -p system.prmtop -c heat.rst7 -r equil.rst7 -x equil.nc
+ 产物性放置体系: 此阶段保持配体 ntr 限制; 常规体系可去掉 ntr 三行
+ &cntrl
+  imin=0, irest=1, ntx=5,
+  nstlim=400000, dt=0.002,        ! 800 ps
+  ntt=3, temp0=300.0, gamma_ln=2.0, ig=-1,
+  ntp=1, taup=2.0, barostat=1,    ! Berendsen 定密度; MC barostat=2 可选
+  ntc=2, ntf=2, ntb=2, cut=10.0,
+  iwrap=1,                        ! ⚠️ 分析前必须 autoimage (见 references/analysis-and-pitfalls.md §4)
+  ntwx=5000, ntpr=1000, ntwr=50000,
+ /

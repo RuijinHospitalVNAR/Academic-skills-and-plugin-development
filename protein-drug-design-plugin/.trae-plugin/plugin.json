@@ -1,0 +1,40 @@
+{
+  "name": "protein-drug-design",
+  "version": "0.1.0",
+  "displayName": "蛋白质药物设计 Skills",
+  "displayNameEn": "Protein Drug Design Skills",
+  "description": "蛋白质药物设计领域技能集：结构预测批量部署与结果分析、分子动力学模拟全流程（AMBER 主力+多引擎选型）、蛋白质序列-结构分析流水线（HMM/MMseqs2/Foldseek），以及端到端工作流编排。",
+  "descriptionEn": "Protein drug design skill set: structure prediction batch deployment & analysis, full MD simulation workflow (AMBER-first with multi-engine guidance), protein sequence-structure analysis pipeline (HMM/MMseqs2/Foldseek), and end-to-end workflow orchestration.",
+  "i18n": {
+    "display_name": {
+      "zh-cn": "蛋白质药物设计 Skills",
+      "en": "Protein Drug Design Skills"
+    },
+    "description": {
+      "zh-cn": "蛋白质药物设计领域技能集：结构预测批量部署与结果分析、分子动力学模拟全流程（AMBER 主力+多引擎选型）、蛋白质序列-结构分析流水线（HMM/MMseqs2/Foldseek），以及端到端工作流编排。",
+      "en": "Protein drug design skill set: structure prediction batch deployment & analysis, full MD simulation workflow, protein sequence-structure analysis pipeline, and end-to-end workflow orchestration."
+    }
+  },
+  "author": {
+    "name": "wcf"
+  },
+  "keywords": [
+    "蛋白质设计",
+    "蛋白药物",
+    "结构预测",
+    "AlphaFold3",
+    "分子动力学",
+    "MD模拟",
+    "AMBER",
+    "GROMACS",
+    "序列分析",
+    "Foldseek",
+    "MMseqs2",
+    "HMMER",
+    "protein design",
+    "molecular dynamics",
+    "structure prediction",
+    "sequence analysis"
+  ],
+  "skills": "./skills/"
+}

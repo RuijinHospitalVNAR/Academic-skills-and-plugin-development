@@ -1,0 +1,14 @@
+NVT 生产 (重建盒不稳定时的替代; Langevin gamma=2.0)
+ 运行: pmemd.cuda -O -i 04_prod_nvt.in -o md_seg1.out -p system.prmtop -c equil.rst7 -r md_seg1.rst7 -x md_seg1.nc
+ 前提: 1ns NPT 平衡已定密度 (03_equil_npt); NVT 对结构/动力学量与 NPT 无差异,
+ 论文须声明: "production run in the NVT ensemble (Langevin thermostat, gamma=2.0 ps^-1, 300 K)
+ at the volume set by a 1 ns NPT equilibration"
+ &cntrl
+  imin=0, irest=1, ntx=5,
+  nstlim=50000000, dt=0.002,      ! 100 ns/段
+  ntt=3, temp0=300.0, gamma_ln=2.0, ig=-1,
+  ntb=1, cut=10.0,                ! NVT: PRESS 恒 0.0 可作为系综取证判据
+  ntc=2, ntf=2,
+  iwrap=1,
+  ntwx=5000, ntwr=500000, ntpr=50000,
+ /

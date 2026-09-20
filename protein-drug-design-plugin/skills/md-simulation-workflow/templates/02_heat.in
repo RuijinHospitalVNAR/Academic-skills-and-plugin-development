@@ -1,0 +1,13 @@
+升温 0->300K, 400ps, 蛋白骨架+配体位置限制
+ 运行: pmemd.cuda -O -i 02_heat.in -o heat.out -p system.prmtop -c min.rst7 -r heat.rst7 -ref min.rst7
+ ⚠️ -ref 必须给(min.rst7), 否则 "Error on OPEN: refc"
+ &cntrl
+  imin=0, irest=0, ntx=1,
+  nstlim=200000, dt=0.002,        ! 400 ps
+  ntt=3, temp0=300.0, tempi=0.0, gamma_ln=2.0, ig=-1,
+  ntc=2, ntf=2,                   ! SHAKE on H
+  ntb=1, cut=10.0,                ! NVT
+  ntr=1, restraint_wt=2.0,
+  restraintmask=':1-290&!@H=',    ! ⚠️ 按体系改; 产物性放置的配体另加 ':LIG' 限制, 防平衡期被排出口袋
+  ntwx=5000, ntpr=1000, ntwr=50000,
+ /

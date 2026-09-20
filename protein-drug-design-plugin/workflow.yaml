@@ -1,0 +1,84 @@
+# 蛋白质药物设计插件 · 工作流配置
+# 用途: 声明各技能在端到端工作流中的角色、数据流转接口与扩展点。
+# 约定: 本文件只做"编排声明"，具体执行逻辑在各 skill 的 SKILL.md 中。
+#       新增技能时: (1) 在 stages 中注册条目; (2) 在 extension_points 中预留钩子即可，无需改代码。
+
+version: 0.1
+plugin: protein-drug-design
+
+# ============ 端到端工作流阶段 ============
+# 数据流转: 每个阶段声明 inputs / outputs 契约，上游产物即为下游输入。
+# 当前主流水线 (以 A9 尿酸酶 / MC2R-MC4R VNAR 项目为实证模板):
+#   序列/结构鉴定 → 结构获取与预测 → 结构质量分析 → MD 动力学验证 → 结合能与机制分析
+stages:
+  family-identification:            # 阶段1: 家族归属 / 同源检索
+    skill: seq-struct-analysis
+    inputs:
+      - query_sequence: "FASTA (目标蛋白序列)"
+    outputs:
+      - homologs: "BLAST/mmseqs2 命中列表 (fasta + 表格)"
+      - structure_neighbors: "Foldseek afdb50/pdb100 结构近邻"
+      - family_verdict: "家族归属结论 (序列层+结构层双重证据)"
+    proven_case: "A9 α/β水解酶家族鉴定 (BLAST nr 100% pid + Foldseek 3h04 RMSD 2.04Å)"
+
+  structure-acquisition:            # 阶段2: 结构获取 (实验结构优先, AI预测兜底)
+    skill: structure-prediction-analysis
+    inputs:
+      - target_sequence: "FASTA"
+      - homolog_templates: "阶段1 的结构近邻 (作 AF3 templates / 实验锚点)"
+    outputs:
+      - structure: "model.cif / model.pdb"
+      - confidence: "pLDDT / ipTM / summary_confidences.json"
+    proven_case: "AF3 100-seed 批量推理 (两阶段 MSA 先行 + 多卡 round-robin)"
+
+  structure-analysis:               # 阶段3: 结构质量与功能位点分析
+    skill: structure-prediction-analysis
+    inputs:
+      - structure: "阶段2 输出"
+      - epitope: "可选, 目标 epitope 定义 (ortho/accessible/u:a-b/c:a-b)"
+    outputs:
+      - quadrants: "双轴四象限判定 (A可用/B分散/C待优化/D池空)"
+      - pocket: "活性口袋/催化位点几何 (参考 build_region_cache)"
+    proven_case: "af3_dualaxis_postprocess.py 标准模式 + targeted --epitope ortho"
+
+  md-validation:                    # 阶段4: 分子动力学验证 (动力学稳定性/结合模式)
+    skill: md-simulation-workflow
+    inputs:
+      - structure: "阶段2/3 输出 (预测结构可直接用, 见 skill 内说明)"
+      - ligand: "可选, 配体 smiles/mol2 + 放置坐标"
+      - protonation_states: "可选, 关键残基质子化态 (PROPKA/CpHMD 判定)"
+    outputs:
+      - topology: "prmtop/inpcrd (tleap 产物, 已过三道守卫)"
+      - trajectories: "production .nc 轨迹"
+      - stability: "RMSD/RMSF/接触/氢键分析 + 收敛判定"
+    proven_case: "C0 系列 4 体系 100ns; SH3/HCG 48 体系 500-769ns 延伸"
+
+  binding-energy:                   # 阶段5: 结合能定量 / 机制深化
+    skill: md-simulation-workflow
+    inputs:
+      - topology: "阶段4 输出"
+      - trajectories: "阶段4 输出 (收敛段)"
+    outputs:
+      - delta_g: "MM/GBSA(PBSA) ΔG_bind ± 块平均SEM + 残基分解"
+      - mechanism: "可选深化: PROPKA/CpHMD (pKa), QM/MM (反应坐标), FEP"
+    proven_case: "MM/GBSA -16.79/-13.89 kcal/mol 双态对比; 块平均 SEM 校正 4.7x 低估"
+
+# ============ 扩展接口 ============
+# 未来新增工具/算法时按此模式注册。skills 列表是唯一需要同步 plugin.json 的地方。
+extension_points:
+  new_engine_adapter:               # 例: 接入 GROMACS/NAMD 作为 md-validation 的备选引擎
+    how: "在 md-simulation-workflow/references/md-engine-comparison.md 注册引擎档位; 若需编排层支持, 在 stages.md-validation.skill_alternatives 加条目"
+    status: "预留 (AMBER 为主引擎)"
+  new_analysis_tool:                # 例: 新增 FEP/umbrella/Markov 状态模型
+    how: "复制 templates/skill-template → skills/<新技能名> → 按 frontmatter 规范写 SKILL.md → stages 注册"
+    status: "预留"
+  alternative_predictor:            # 例: BoltzGen / OpenDDE / Protenix 作为结构预测备选
+    how: "structure-prediction-analysis 已含 Protenix/OpenDDE 档位; 新引擎按同模式补章节"
+    status: "部分已实现 (AF3/Protenix/OpenDDE 三档)"
+
+# ============ 跨技能约定 ============
+conventions:
+  official_first: "官方工具优先; 手写脚本须先与官方输出语义比对确认无 bug 再运行"
+  handoff_per_project: "每个项目独立 handoff.md, 不混写"
+  proven_evidence: "所有参数与判据须标注实证来源 (项目/日期), 未实证项标 ⚠️"
+  cache_invalidation: "改算法或续跑后必须失效所有层级缓存; 完成判定以 .out 终结标记为准, 不以文件存在性为准"

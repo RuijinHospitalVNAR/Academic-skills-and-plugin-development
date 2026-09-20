@@ -1,0 +1,6 @@
+能量最小化 (全原子)
+ &cntrl
+  imin=1, maxcyc=5000, ncyc=2500,
+  ntb=1, igb=0, cut=10.0,
+  ntpr=200,
+ /
