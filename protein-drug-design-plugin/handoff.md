@@ -48,6 +48,11 @@
 1. **v0.1.1 已推送 GitHub**（main 13f6b49, <DEPLOY_KEY> key 生效）。
 2. **数据采集模块补齐（用户指出缺口，采纳）**：新增 references/data-acquisition.md——NCBI E-utilities（efetch 批量 FASTA ≤200/post、esearch→efetch 链、elink→efetch 基因组上下文 A9 操纵子实证链、web BLAST URL API）、UniProt REST（fasta/search/注释字段）、RCSB/AFDB 结构拉取（含网络受限降级方案）、Foldseek 结果落盘、采集规范（manifest/幂等/限速/版本锚定/原文落盘）。SKILL.md 流水线补"步骤1.5 数据采集"、产出清单补 raw/ 目录、触发词补数据下载等；playbook Step1.5/Step3/Step4 接入链接。
 
+## 更新 (2026-09-20 第四轮)
+
+1. **抗体-抗原库采集补齐（用户指出缺口）**：data-acquisition.md 新增 §5"抗体-抗原专用库"——SAbDab(结构+CDR 注释, weekly)/Thera-SAbDab(WHO INN)/CoVAbDab(序列全量 csv)/OAS(天然库 unit 级, TB 级按需)/IMGT germline+IgBLAST(NCBI FTP 稳定端点)/IEDB(REST+全量导出)/AbDb/NanoLAS 备选；OPIG 端点标注 ⚠️ 以站点最新为准（newsabdab 迁移期勿硬编码）；结构本体走 RCSB 避免整包拉取；清洗范式挂接本机 MAGE repo notebook（SAbDab detagging/CoVAbDab curation）；ANARCI 衔接说明。原"采集规范"§5 改 §6，补 raw/antibody/ 分目录规则。SKILL.md 触发词补 sabdab/covabdab/oas/imgt/iedb/igblast 等。
+2. 同步 GitHub。
+
 ## 下一步计划
 
 1. [ ] 实测触发：插件安装/注册后，用典型请求（"做这个蛋白的 MD"、"A9 是什么家族"）验证技能触发与加载链路。
