@@ -1,18 +1,18 @@
 {
   "name": "protein-drug-design",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "displayName": "蛋白质药物设计 Skills",
   "displayNameEn": "Protein Drug Design Skills",
-  "description": "蛋白质药物设计全链路技能插件：序列/结构分析、AF3 批量预测、MD 模拟（AMBER 主力）、结合能计算，以及文献调研、研究构思、实验设计、统计分析、学术写作、论文审查、成果展示（PPT/视频/配图）等科研全流程 24 项技能。",
-  "descriptionEn": "Full-chain protein drug design skill plugin: sequence/structure analysis, AF3 batch prediction, MD simulation (AMBER-first), binding-energy calculation, plus literature research, research ideation, experiment design, statistical analysis, academic writing, manuscript review, and presentation (slides/video/figures) — 24 skills covering the entire research pipeline.",
+  "description": "蛋白质药物设计与科研全链路技能插件（43 项）：计算主线（序列/结构分析、AF3 批量预测、MD 模拟、结合能）+ 文献/构思/实验设计/统计/学术写作/论文审查/PPT视频配图 + nature-skills 全套（中英对照精读、PaperCard、CNS 引文核实、专利草稿、实验日志等）。",
+  "descriptionEn": "Full-chain protein drug design & research skill plugin (43 skills): computation mainline (sequence/structure analysis, AF3 batch prediction, MD simulation, binding energy) + literature/ideation/experiment-design/statistics/academic-writing/manuscript-review/presentation + the complete nature-skills suite (bilingual paper readers, PaperCards, CNS citation verification, patent drafting, experiment logging, and more).",
   "i18n": {
     "display_name": {
       "zh-cn": "蛋白质药物设计 Skills",
       "en": "Protein Drug Design Skills"
     },
     "description": {
-      "zh-cn": "蛋白质药物设计全链路技能插件：序列/结构分析、AF3 批量预测、MD 模拟（AMBER 主力）、结合能计算，以及文献调研、研究构思、实验设计、统计分析、学术写作、论文审查、成果展示（PPT/视频/配图）等科研全流程 24 项技能。",
-      "en": "Full-chain protein drug design skill plugin: sequence/structure analysis, AF3 batch prediction, MD simulation (AMBER-first), binding-energy calculation, plus literature research, research ideation, experiment design, statistical analysis, academic writing, manuscript review, and presentation (slides/video/figures) — 24 skills covering the entire research pipeline."
+      "zh-cn": "蛋白质药物设计与科研全链路技能插件（43 项）：计算主线（序列/结构分析、AF3 批量预测、MD 模拟、结合能）+ 文献/构思/实验设计/统计/学术写作/论文审查/PPT视频配图 + nature-skills 全套（中英对照精读、PaperCard、CNS 引文核实、专利草稿、实验日志等）。",
+      "en": "Full-chain protein drug design & research skill plugin (43 skills): computation mainline (sequence/structure analysis, AF3 batch prediction, MD simulation, binding energy) + literature/ideation/experiment-design/statistics/academic-writing/manuscript-review/presentation + the complete nature-skills suite (bilingual paper readers, PaperCards, CNS citation verification, patent drafting, experiment logging, and more)."
     }
   },
   "author": {
@@ -21,6 +21,7 @@
   "keywords": [
     "AMBER",
     "AlphaFold3",
+    "CNS",
     "Foldseek",
     "GROMACS",
     "HMMER",
@@ -28,28 +29,41 @@
     "MMseqs2",
     "Manim",
     "PPT",
+    "PaperCard",
     "academic writing",
+    "bilingual reader",
+    "citation verification",
     "deep research",
+    "experiment log",
     "molecular dynamics",
+    "nature-skills",
+    "patent draft",
     "peer review",
     "protein design",
     "sequence analysis",
+    "statistical reporting",
     "structure prediction",
+    "专利草稿",
+    "中英对照",
     "分子动力学",
     "去AI味",
     "学位论文",
     "学术写作",
     "学术润色",
+    "实验日志",
     "序列分析",
+    "引文核实",
     "文献调研",
     "研究构思",
     "科研绘图",
     "答辩",
     "结构预测",
     "统计分析",
+    "统计报告",
     "蛋白药物",
     "蛋白质设计",
     "论文审查",
+    "论文精读",
     "预注册"
   ],
   "skills": "./skills/"

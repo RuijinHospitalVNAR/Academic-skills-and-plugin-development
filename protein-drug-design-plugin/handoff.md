@@ -77,6 +77,14 @@
 3. **智能体目录同步**：20 技能复制到 ~/.trae-cn/skills/（⚠️ statistical-analysis 与全局 K-Dense 英文版同名，K-Dense 版先备份为 statistical-analysis.bak_kdense_20260920 再覆盖；experiment-design(tashan) 与 experimental-design(K-Dense) 不同名不冲突）。
 4. 双语 README 更新全链路口径+收编说明；GitHub 推送。
 
+## 更新 (2026-09-20 第九轮 · v0.3.0)
+
+1. **移除 world-threads-entry**（用户指令：深度绑定他山平台的删除）——插件/用户级目录/GitHub 三处删除，plugin.json/workflow.yaml/双语 README 同步清理，grep 验证无残留（handoff 历史记录除外）。他山收编数 20→19。
+2. **nature-skills 全量收编 20 项**（用户确认全收；github.com/Yuan1z0825/nature-skills, Apache-2.0）：与计算主线零触发重叠，与已收 19 项互补（新增中英对照精读/PaperCard/CNS引文核实/论文→专利草稿/实验日志/统计报告审计等）。description 全部双语化（中文技能补 EN: 摘要、英文技能补中文触发词行）。总量 43。
+3. **多 IDE/桌面 agent 适配器 install.sh**：trae/claude/codex/cursor/windsurf/opencode/openclaw/generic 八目标，原理=Agent Skills 规范跨工具通用、仅目录不同；Cursor/Windsurf 打印 rules 指向提示。实测 codex（~/.codex/skills 43 个）与 generic（~/.agents/skills 43 个）通过。
+4. **英文化策略（用户采纳推荐案）**：description 层双语化（受众可见的触发层），正文保持中文为主（实证原文，避免翻译失真），重参考资料按需逐步英文化——已写入双语 README。
+5. 双语 README 重写为 v0.3.0 全链路口径（修掉中文 README 停在 v0.1.1 的滞后问题）；GitHub 推送。
+
 ## 下一步计划
 
 1. [ ] 实测触发：插件安装/注册后，用典型请求（"做这个蛋白的 MD"、"A9 是什么家族"）验证技能触发与加载链路。
