@@ -1,0 +1,31 @@
+{
+  "candidate": "md-simulation-workflow",
+  "verdict": "ABSORB 候选",
+  "top_matches": [
+    {
+      "skill": "structure-prediction-analysis",
+      "desc_jaccard": 0.012,
+      "body_overlap": 0.122
+    },
+    {
+      "skill": "protein-design-workflow",
+      "desc_jaccard": 0.047,
+      "body_overlap": 0.114
+    },
+    {
+      "skill": "giiisp-scientific-image-generation",
+      "desc_jaccard": 0.0,
+      "body_overlap": 0.088
+    },
+    {
+      "skill": "research-dream",
+      "desc_jaccard": 0.024,
+      "body_overlap": 0.074
+    },
+    {
+      "skill": "seq-struct-analysis",
+      "desc_jaccard": 0.021,
+      "body_overlap": 0.06
+    }
+  ]
+}

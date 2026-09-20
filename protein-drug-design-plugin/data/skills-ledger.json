@@ -1,0 +1,757 @@
+{
+  "meta": {
+    "created": "2026-09-20 17:55:40",
+    "plugin": "protein-drug-design"
+  },
+  "skills": {
+    "academic-writing": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: 面向科研成果的\"写—审—改—投\"学术写作全流程。当用户要撰写/改写论文或某个章节、做同行评审或生成审稿意见、回复审稿人(rebuttal)与规划修订、撰写基金/项目申请书、或准备投稿材料(摘要/标题/cover letter/期刊适配)时使用。聚焦学术文本的产出与打磨；不负责文献检索与综述综合",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "cognitive-profile": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: |\n  在对话里慢慢形成一份可修正的用户画像。用于用户要求建立、查看、更新画像，\n  希望回答更贴合自己，或反复纠正\"不像我\"\"太官方\"\"理解错了\"的场景。\n  也用于用户说\"记住我的偏好\"\"以后默认这样\"\"按我之前习惯\"\"别再这样\"\n  \"不要记录\"\"删掉画像\"\"你记了什么\"\"你忘了\"，或普",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "experiment-design": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: 在采集数据之前，把\"想验证什么\"变成统计上站得住、可复现、可解释的研究设计。当用户要设计实验/研究方案、选择设计类型（完全随机/随机区组/析因/部分析因/交叉/重复测量/整群随机/响应面）、做随机化与区组、估算样本量与统计功效、规划机器学习消融/基准、或制定统计分析计划与预注册时使用。只管\"采",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "find-science-skills": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: Use when a user asks which research Skill, MCP service, academic workflow, experimental tool, simulation capability, analysis resource, writing aid",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "giiisp-paper-search-apis": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: 调用 Giiisp/集思谱论文检索 POST 接口，按用户问题选择 OA 标题摘要检索或 arXiv 摘要、编号、多字段、标题检索。用于论文检索、文献初筛、arXiv 定位、开放论文补充和引用审计。\n",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "giiisp-scientific-image-generation": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: 使用 Giiisp Imagine 科研图像生成接口，把论文段落、图题、实验流程或机制描述整理成作图简报、生成请求、图片结果和检查记录。适用于论文配图、科研流程图、机制通路图、实验示意图和学术汇报图。\n",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "manim-agent": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: >-\n  Use when Codex needs to create, run, review, debug, or package Manim Agent workflows for mathematical or technical explainer videos: Manim ani",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "mcp-criticagent": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: Evaluate MCP (Model Context Protocol) servers and tools end to end — deploy from a GitHub URL or npm package, test protocol communication and tool ",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "md-simulation-workflow": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: 蛋白质/复合物分子动力学模拟全流程技能（AMBER 主力）。Use when 用户要做蛋白-配体或蛋白-蛋白体系的 MD 模拟：结构准备与质子化、配体力场参数化（antechamber/RESP）、tleap 体系构建、min→heat→equil→production 升温平衡、GPU 生产",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "nature-academic-search": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: \"Search literature across sources, verify or manage citations, and build MeSH strategies or citation-impact audits. Use for 文献检索、引文核对、参考文献管理、严格他引 a",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "nature-citation": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: \"Find and verify Nature/CNS-family literature supporting manuscript claims, with claim-to-source mapping and reference-manager export. Use for Natu",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "nature-data": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: \"Draft or audit manuscript Data/Code Availability statements, dataset access routes, repository plans, and FAIR metadata. Use for 数据可用性声明、数据共享、数据仓库",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "nature-downloader": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: Use when a user needs lawful academic full text, CNKI institutional access, English OA retrieval, publisher API access, institutional browser fallb",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "nature-experiment-log": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: \"标准化实验日志记录——直接上传或读取本地图片、语音和文字，产出带 YAML frontmatter 的 Markdown；可选集成飞书 CLI 与 Obsidian。\"\nlicense: MIT\nmetadata:\n  author: Jiahao8595\n  hermes:\n    tag",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "nature-figure": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: >-\n  Create, revise, audit, and export manuscript scientific figures in Python or R.\n  Use for 论文配图、科研绘图、多面板图 and submission-ready plots, or explic",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "nature-image2ppt": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: \"Reconstruct slide images, screenshots, scanned PDFs, or image-only PPTX files as object-level editable PowerPoint. Use for 图片转可编辑PPT、截图还原PPT and d",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "nature-literature-pipeline": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: |\n  Complete automated literature discovery pipeline: multi-source search → six-dimension scoring → fine reading → formatted delivery → archival.\n ",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "nature-paper-card": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: \"Build a structured deep-reading Paper Card for one scientific paper, analysing methods, experiment-to-claim evidence, limitations, and research id",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "nature-paper-to-patent": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: \"Turn research papers or inventor materials into evidence-grounded Chinese invention patent drafts and technical disclosures. Use for 技术交底书、专利撰写、现有",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "nature-paper2ppt": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: Create or improve a Chinese academic PPTX from a scientific paper or research reading notes, with source figures and speaker notes. Use for 论文做PPT、",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "nature-polishing": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: Polish, translate, or tighten existing academic prose while preserving facts, terminology, and evidence boundaries. Use for 论文润色、学术翻译、正文精简, or manu",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "nature-proposal-writer": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: \"Compose, revise, or audit research proposals, opening reports, and research plans from supporting evidence. Use for 研究计划、开题报告、科研项目申请书. Invoked as ",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "nature-reader": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: \"Create source-grounded Chinese-English paper readers with aligned text, figures, tables, and equations. Use for 全文翻译、中英文对照、论文精读 or source-linked q",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "nature-ref-verifier": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: >-\n  对学术文献逐条执行多源交叉验证，逐字段对比作者、标题、年份、卷期、页码，\n  标记卷年/DOI年冲突、作者顺序异常、页码偏差等问题，输出结构化验证报告。\n  可批量处理整篇论文/开题报告的参考文献列表，也可单条校验，支持与 Zotero 同步修正。\nEN: Verify refere",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "nature-response": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: >-\n  Draft, audit, or revise responses to peer review, revision cover letters, and\n  marked-manuscript or LaTeX revision packages. Use for 审稿意见回复、逐",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "nature-reviewer": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: \"Provide evidence-grounded mock peer review of scientific manuscripts or excerpts, covering significance, validity, and major/minor concerns. Use f",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "nature-shared": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: Internal shared-reference support package for installed Nature Skills, including nature-writing, nature-polishing, nature-response, nature-reader, ",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "nature-statistics": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: \"Audit or improve manuscript statistical reporting, including experimental units, replication, uncertainty, tests, and figure statistics. Use for 统",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "nature-writing": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: Draft or restructure scientific manuscript arguments, sections, and initial-submission materials from author-provided evidence. Use for 论文写作、章节起草、论",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "papercheck": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: Run no-key citation audits for academic papers using local evidence extraction, bundled TaShan-PaperChecker rules, and the current Codex model. Use",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "practical-course-producer": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: Generate and audit evidence-based practical course videos for executable software, research-tool, or AI-assisted workflows with observable real int",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "protein-design-workflow": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: 蛋白质药物设计端到端工作流编排器。Use when 用户提出跨阶段的蛋白质药物设计任务（如\"从序列到 MD 验证的完整分析\"、\"把这个蛋白的家族、结构、动力学、结合能一起做\"）、要确定某任务应该调用哪个技能与什么顺序、要规划多阶段项目的时间线与算力、或需要在本插件中接入新技能/新引擎/新分析工",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "research-baseline-builder": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: Translate scientific questions into clear data inputs, outputs, and baseline workflows. Use when Codex needs to help researchers clarify what data ",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "research-dream": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: Research Dream。面向科研场景的记忆巩固技能。在任何挂载环境（OpenClaw、Codex、Claude Code、Cursor 等）里长期陪伴科研用户时，通过日常对话逐步更新 USER.md、SOUL.md、MEMORY.md 与 memory/YYYY-MM-DD.md，并周期",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "sci-employee-deep-research": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: 调用或模拟 Deep Research 流程，把论文检索、关键词拆解、候选证据和最终 answer 组织成可核验研究报告。适用于赛题讲解、开题调研、方案依据整理。\n",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "scientific-humanization": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: 用于中文科研文本的 scientific humanization：把论文、综述、基金、项目书、技术方案、答辩、课程讲稿、PPT讲稿和投资人科研表达改得更像专业作者或讲师本人在说，同时保护事实、术语、数字、引用、图表编号和证据强度。适用于用户说“别AI味”“人一点”“别太官方”“像我讲的”“去",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "scispark": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: Generate evidence-tracked research ideas through an arXiv-based, skill-native Scispark workflow. Use when Codex needs to turn a research keyword, q",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "seq-struct-analysis": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: 蛋白质序列与结构检索、获取、清洗与分析流水线。Use when 用户要鉴定蛋白家族归属或同源序列（BLAST/Jackhmmer/HHsuite/MMseqs2）、从远端库采集数据（NCBI/UniProt/RCSB/AlphaFold DB + 抗体-抗原库 SAbDab/CoVAbDab/",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "skill-criticagent": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: Evaluate Agent Skills (SKILL.md directories) and answer \"is this skill any good / safe to install\" — spec compliance with security scanning, with/w",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "statistical-analysis": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: 数据采集完成后，按采集前锁定的分析计划执行验证性统计分析。当用户要做组间比较（t 检验/ANOVA/非参数检验）、配对前后对比、列联表卡方、相关分析、效应量与置信区间计算、多重比较校正、检验前提检查（正态性/方差齐性）、或要把统计结果写成可报告的结论时使用。只管\"采集后的验证性分析\"；采集前的",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "structure-prediction-analysis": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: \"蛋白质结构预测批量部署与结果分析技巧集（AF3/Protenix v2/OpenDDE）。覆盖多卡部署、MSA 预计算+批量推理两阶段模式、传输瘦身、以及 AF3 大规模结果双轴四象限分析（有/无目标 epitope 两种模式）。Invoke when 用户要做结构预测批量推理、多卡部署、M",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "thesis-audit-reviewer": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: Use this skill when the user asks to review, audit, proofread, or produce a formal evaluation report for a degree thesis, dissertation, academic pa",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "visual-deck-builder": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "pre-existing(初始化扫描)",
+      "provenance": "",
+      "fm_desc_head": "description: >-\n  Build image-model-driven PPT decks from a user topic, source materials, papers, reports, notes, datasets, existing slides, or style references",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:55:40",
+          "decision": "init-scan",
+          "reason": "目录初始化"
+        }
+      ]
+    },
+    "skill-manager": {
+      "status": "active",
+      "date_added": "2026-09-20",
+      "source": "in-house(本轮开发)",
+      "provenance": "",
+      "fm_desc_head": "description: 本插件技能生命周期管理器：添加/合并/下架 skills 的半自动流程与审计台账。Use when 用户要往插件加新技能（从踩坑/重复操作/新方法中沉淀）、要把新技能与现有技能对比决定吸收/合并/拒绝、要下架效果不佳或过时的技能、要查看技能台账/审计日志/批量管理技能，或用户说\"把这个经验做成",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-09-20 17:56:23",
+          "decision": "absorb",
+          "reason": "模块自登记",
+          "compare_report": ""
+        }
+      ]
+    }
+  }
+}

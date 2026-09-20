@@ -1,0 +1,2 @@
+{"ts": "2026-09-20 17:55:40", "op": "init", "target": "*", "detail": "new=43 total=43", "actor": "agent", "user_confirmed": false}
+{"ts": "2026-09-20 17:56:23", "op": "add", "target": "skill-manager", "detail": "source=in-house(本轮开发) reason=模块自登记", "actor": "agent", "user_confirmed": true}

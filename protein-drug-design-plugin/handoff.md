@@ -85,6 +85,14 @@
 4. **英文化策略（用户采纳推荐案）**：description 层双语化（受众可见的触发层），正文保持中文为主（实证原文，避免翻译失真），重参考资料按需逐步英文化——已写入双语 README。
 5. 双语 README 重写为 v0.3.0 全链路口径（修掉中文 README 停在 v0.1.1 的滞后问题）；GitHub 推送。
 
+## 更新 (2026-09-20 第十轮)
+
+1. **skill-manager 技能生命周期管理模块上线**（用户需求：添加/删除/对比/可审计/批量+单个）：
+   - skills/skill-manager/：SKILL.md（ADD 五步半自动流程含 S2 用户三问/REMOVE 四步/AUDIT/铁律）+ references/decision-criteria.md（absorb/merge/reject/remove 四类判据+阈值）+ scripts/ledger.py（台账/审计/三处删除+tar备份/注册表清理/batch）+ scripts/compare.py（desc Jaccard+正文 bigram+触发词冲突→三选一建议）。
+   - 实测：init 43 条、add 自登记（uc=True）、remove --dry-run、audit 输出、compare 自测合理（md 技能 top 相似 workflow 0.11）。修两 bug：parents[2]→[3]、data mkdir。
+   - 台账 data/skills-ledger.json（44 条）+ 审计 data/audit-log.jsonl（只追加）；用户级目录已装机。
+2. plugin.json keywords 补技能管理词；README 补技能管理小节；GitHub 推送。
+
 ## 下一步计划
 
 1. [ ] 实测触发：插件安装/注册后，用典型请求（"做这个蛋白的 MD"、"A9 是什么家族"）验证技能触发与加载链路。

@@ -97,6 +97,10 @@ Skills have two layers: **description** (always-on in the system prompt, decides
 | Tashan Research (tashan-research-skills) | 19 adopted skills (original plugin uninstalled; backup kept locally) | UCAS Tashan (tashan.ac.cn) |
 | nature-skills | 20 adopted skills | github.com/Yuan1z0825/nature-skills (Apache-2.0) |
 
+## Skill Lifecycle Management (skill-manager)
+
+The built-in `skill-manager` skill governs add/merge/remove for all plugin skills: semi-automatic generation from work lessons (asking the user at key decision points) → `compare.py` similarity vs existing skills → absorb/merge/reject per preset thresholds → `ledger.py` ledger + append-only audit log; removal auto-backups (tar) and cleans all three locations. Single and batch modes; fully traceable and auditable.
+
 ## Extending
 
 - **Add a skill**: copy `templates/skill-template/` → `skills/<name>/` → write trigger-only frontmatter → register the stage in `workflow.yaml` → add keywords to `plugin.json`.
