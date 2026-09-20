@@ -62,6 +62,11 @@
    - SKILL.md 触发词补 sabdab2，选型表补本地缓存行。
 2. 同步 GitHub。
 
+## 更新 (2026-09-20 第七轮)
+
+1. **智能体接入完成（用户指令）**：插件三新技能 (md-simulation-workflow / seq-struct-analysis / protein-design-workflow) 已复制到用户级技能目录 ~/.trae-cn/skills/（frontmatter 校验过），蛋白质药物设计智能体可立即触发；structure-prediction-analysis 原件已在目录，未动。被覆盖的同名 OPIG 英文版 protein-design-workflow 已备份为 protein-design-workflow.bak_opig_20260920。
+2. **仓库级双语 README**：撰写 README.md（中文版）+ README_EN.md（English version），含插件简介/技能表/工作流图/安装方式（含智能体接入说明）/数据来源与致谢（OPIG/SAbDab2/Zenodo/ANARCII 等）/许可注记。GitHub 已推送。
+
 ## 下一步计划
 
 1. [ ] 实测触发：插件安装/注册后，用典型请求（"做这个蛋白的 MD"、"A9 是什么家族"）验证技能触发与加载链路。
