@@ -24,7 +24,9 @@ Academic-skills-and-plugin-development/
 - **Management**: skill-manager (skill lifecycle: add/merge/remove + auditable ledger)
 - **Full chain** (39 adopted): literature research, research ideation, experiment design, statistical analysis, academic writing, manuscript review, presentation (slides/video/figures/patents/experiment logs)
 
-Quick install (details in the [plugin README](protein-drug-design-plugin/README_EN.md)):
+**Zero-command install**: copy [this prompt](protein-drug-design-plugin/agent-install.md) to your AI assistant and it installs everything for you.
+
+Manual quick install (details in the [plugin README](protein-drug-design-plugin/README_EN.md)):
 
 ```bash
 git clone https://github.com/RuijinHospitalVNAR/Academic-skills-and-plugin-development.git

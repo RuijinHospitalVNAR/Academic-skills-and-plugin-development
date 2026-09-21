@@ -24,7 +24,9 @@ Academic-skills-and-plugin-development/
 - **管理**：skill-manager（技能生命周期：添加/合并/下架 + 台账审计）
 - **全链路**（39 项收编）：文献调研、研究构思、实验设计、统计分析、学术写作、论文审查、成果展示（PPT/视频/配图/专利/实验日志）
 
-快速安装（详见[插件 README](protein-drug-design-plugin/README.md)）：
+**零命令安装**：不想敲命令？把[这段提示词](protein-drug-design-plugin/agent-install.md)复制给你的 AI 助手，它会自动完成安装。
+
+手动快速安装（详见[插件 README](protein-drug-design-plugin/README.md)）：
 
 ```bash
 git clone https://github.com/RuijinHospitalVNAR/Academic-skills-and-plugin-development.git

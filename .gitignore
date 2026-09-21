@@ -5,3 +5,7 @@
 *.pem
 *_deploy
 *_deploy.pub
+
+# python caches
+__pycache__/
+*.pyc

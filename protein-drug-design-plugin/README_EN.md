@@ -70,6 +70,8 @@ Full contracts for the 11 stages: [workflow.yaml](workflow.yaml).
 
 ## Installation (multi-IDE / desktop agents)
 
+**Zero-command install**: paste the prompt from [agent-install.md](agent-install.md) to your AI assistant — it clones, detects, installs and verifies automatically (Chinese & English prompts included).
+
 The repo ships `install.sh`, which copies `skills/` into each tool's skill directory:
 
 | Target | Command | Skill directory |

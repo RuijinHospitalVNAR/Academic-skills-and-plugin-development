@@ -70,6 +70,8 @@ FASTA ──[seq-struct-analysis]──> 家族归属+结构锚点
 
 ## 安装使用（多 IDE / 桌面 agent 适配）
 
+**零命令安装**：把 [agent-install.md](agent-install.md) 里的提示词整段复制给你的 AI 助手，它会自动完成克隆、检测、安装与验证（中英文提示词均备）。
+
 仓库自带 `install.sh`，按目标工具把 `skills/` 复制到其技能目录：
 
 | 目标 | 命令 | 技能目录 |
