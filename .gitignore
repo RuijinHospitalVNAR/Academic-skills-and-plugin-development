@@ -9,3 +9,6 @@
 # python caches
 __pycache__/
 *.pyc
+
+# project handoff files (local-only, contains project history & local paths)
+**/handoff.md
