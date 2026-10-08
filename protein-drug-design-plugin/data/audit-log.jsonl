@@ -1,2 +1,3 @@
 {"ts": "2026-09-20 17:55:40", "op": "init", "target": "*", "detail": "new=43 total=43", "actor": "agent", "user_confirmed": false}
 {"ts": "2026-09-20 17:56:23", "op": "add", "target": "skill-manager", "detail": "source=in-house(本轮开发) reason=模块自登记", "actor": "agent", "user_confirmed": true}
+{"ts": "2026-10-08 16:11:40", "op": "add", "target": "bizard", "detail": "source=openbiox/Bizard 官方 skill ZIP (CC-BY-NC, iMetaMed 2026) reason=填补组学/临床图型库空白: 798 例 R 图谱(volcano/Manhattan/Circos/KM等)与现有绘图技能零管线重叠; 470KB 轻量; 已加边界声明与 nature-figure 分工", "actor": "agent", "user_confirmed": true}

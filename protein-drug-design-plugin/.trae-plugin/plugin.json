@@ -1,18 +1,18 @@
 {
   "name": "protein-drug-design",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "displayName": "蛋白质药物设计 Skills",
   "displayNameEn": "Protein Drug Design Skills",
-  "description": "蛋白质药物设计与科研全链路技能插件（43 项）：计算主线（序列/结构分析、AF3 批量预测、MD 模拟、结合能）+ 文献/构思/实验设计/统计/学术写作/论文审查/PPT视频配图 + nature-skills 全套（中英对照精读、PaperCard、CNS 引文核实、专利草稿、实验日志等）。",
-  "descriptionEn": "Full-chain protein drug design & research skill plugin (43 skills): computation mainline (sequence/structure analysis, AF3 batch prediction, MD simulation, binding energy) + literature/ideation/experiment-design/statistics/academic-writing/manuscript-review/presentation + the complete nature-skills suite (bilingual paper readers, PaperCards, CNS citation verification, patent drafting, experiment logging, and more).",
+  "description": "蛋白质药物设计与科研全链路技能插件（45 项）：计算主线（序列/结构分析、AF3 批量预测、MD 模拟、结合能）+ 文献/构思/实验设计/统计/学术写作/论文审查/PPT视频配图 + nature-skills 全套（中英对照精读、PaperCard、CNS 引文核实、专利草稿、实验日志等）。",
+  "descriptionEn": "Full-chain protein drug design & research skill plugin (45 skills): computation mainline (sequence/structure analysis, AF3 batch prediction, MD simulation, binding energy) + literature/ideation/experiment-design/statistics/academic-writing/manuscript-review/presentation + the complete nature-skills suite (bilingual paper readers, PaperCards, CNS citation verification, patent drafting, experiment logging, and more).",
   "i18n": {
     "display_name": {
       "zh-cn": "蛋白质药物设计 Skills",
       "en": "Protein Drug Design Skills"
     },
     "description": {
-      "zh-cn": "蛋白质药物设计与科研全链路技能插件（43 项）：计算主线（序列/结构分析、AF3 批量预测、MD 模拟、结合能）+ 文献/构思/实验设计/统计/学术写作/论文审查/PPT视频配图 + nature-skills 全套（中英对照精读、PaperCard、CNS 引文核实、专利草稿、实验日志等）。",
-      "en": "Full-chain protein drug design & research skill plugin (43 skills): computation mainline (sequence/structure analysis, AF3 batch prediction, MD simulation, binding energy) + literature/ideation/experiment-design/statistics/academic-writing/manuscript-review/presentation + the complete nature-skills suite (bilingual paper readers, PaperCards, CNS citation verification, patent drafting, experiment logging, and more)."
+      "zh-cn": "蛋白质药物设计与科研全链路技能插件（45 项）：计算主线（序列/结构分析、AF3 批量预测、MD 模拟、结合能）+ 文献/构思/实验设计/统计/学术写作/论文审查/PPT视频配图 + nature-skills 全套（中英对照精读、PaperCard、CNS 引文核实、专利草稿、实验日志等）。",
+      "en": "Full-chain protein drug design & research skill plugin (45 skills): computation mainline (sequence/structure analysis, AF3 batch prediction, MD simulation, binding energy) + literature/ideation/experiment-design/statistics/academic-writing/manuscript-review/presentation + the complete nature-skills suite (bilingual paper readers, PaperCards, CNS citation verification, patent drafting, experiment logging, and more)."
     }
   },
   "author": {
@@ -71,7 +71,12 @@
     "蛋白质设计",
     "论文审查",
     "论文精读",
-    "预注册"
+    "预注册",
+    "bizard",
+    "biomedical visualization",
+    "组学图",
+    "volcano",
+    "kaplan-meier"
   ],
   "skills": "./skills/"
 }

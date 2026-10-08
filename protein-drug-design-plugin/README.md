@@ -2,7 +2,7 @@
 
 [English](README_EN.md) | 简体中文
 
-蛋白质药物设计**全链路**技能插件（v0.4.0，**44 项技能**）：
+蛋白质药物设计**全链路**技能插件（v0.4.0，**45 项技能**）：
 
 - **计算主线**（4 项自研技能，实证固化）：**序列/结构鉴定 → AI 结构预测与批量分析 → 分子动力学验证 → 结合能与机制深化**
 - **管理与元技能**：skill-manager（技能生命周期管理）
@@ -17,7 +17,7 @@ protein-drug-design-plugin/
 ├── install.sh                        # 多 IDE / 桌面 agent 安装适配器
 ├── data/                             # 技能台账 + 只追加审计日志（skill-manager 产物）
 ├── templates/skill-template/         # 新技能骨架模板（扩展入口）
-└── skills/                           # 44 项技能（含 skill-manager 自管理）
+└── skills/                           # 45 项技能（含 skill-manager 自管理）
     ├── (计算主线 4 项)               # seq-struct-analysis / structure-prediction-analysis /
     │                                 # md-simulation-workflow / protein-design-workflow
     ├── (管理 1 项)                   # skill-manager（添加/合并/下架+台账审计）
@@ -109,6 +109,7 @@ FASTA ──[seq-struct-analysis]──> 家族归属+结构锚点
 | RCSB PDB / AlphaFold DB | 结构获取 | rcsb.org / alphafold.ebi.ac.uk |
 | SAbDab2 及其 AI/ML 训练集 | 抗体-抗原结构与 split | Capel et al. 2026, bioRxiv doi:10.64898/2026.06.16.732554；数据 Zenodo 20083995 (CC-BY 4.0) |
 | CoVAbDab / OAS | 抗体序列库 | OPIG (opig.stats.ox.ac.uk) |
+| Bizard 图谱 | [openbiox/Bizard](https://github.com/openbiox/Bizard) | 798 例 R/Python/Julia 可复现图教程与图型索引（CC-BY-NC） |
 | ANARCII | 抗体编号（transformer，原生 VNAR 模型） | github.com/oxpig/ANARCII (BSD-3) |
 | MMseqs2 / HMMER / Foldseek / MEME Suite | 序列/结构检索与 motif | 各官方发行渠道 |
 | nature-skills | 收编 20 项 | github.com/Yuan1z0825/nature-skills (Apache-2.0) |
@@ -121,7 +122,7 @@ FASTA ──[seq-struct-analysis]──> 家族归属+结构锚点
 
 ## 版本
 
-- **0.4.0** (2026-09-20)：新增 skill-manager 技能生命周期管理模块（半自动生成→对比三选一→台账+审计，单个/批量双模式，44 项技能全部入账）。
+- **0.4.0** (2026-09-20)：新增 skill-manager 技能生命周期管理模块（半自动生成→对比三选一→台账+审计，单个/批量双模式，45 项技能全部入账）。
 - **0.3.0** (2026-09-20)：收编 nature-skills 全部 20 项（description 双语化）；新增多 IDE/桌面 agent 适配器 `install.sh`；移除平台绑定的 world-threads-entry。
 - **0.2.0** (2026-09-20)：收编科研全链路 20 项技能（4 项加边界声明），workflow.yaml 注册 6 个全链路阶段。
 - **0.1.1** (2026-09-20)：数据采集板块（通用库+抗体-抗原库+SAbDab2 本地缓存）；ANARCII 编号规范；内网地址脱敏。

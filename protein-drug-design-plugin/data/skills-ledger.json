@@ -752,6 +752,24 @@
           "compare_report": ""
         }
       ]
+    },
+    "bizard": {
+      "status": "active",
+      "date_added": "2026-10-08",
+      "source": "openbiox/Bizard 官方 skill ZIP (CC-BY-NC, iMetaMed 2026)",
+      "provenance": "",
+      "fm_desc_head": "description: >\n  Use this skill whenever the user asks about data visualization, biomedical\n  charts, scientific figures, or bioinformatics plots.\n  Trigger key",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-10-08 16:11:40",
+          "decision": "absorb",
+          "reason": "填补组学/临床图型库空白: 798 例 R 图谱(volcano/Manhattan/Circos/KM等)与现有绘图技能零管线重叠; 470KB 轻量; 已加边界声明与 nature-figure 分工",
+          "compare_report": ""
+        }
+      ]
     }
   }
 }
