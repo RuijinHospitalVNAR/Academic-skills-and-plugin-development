@@ -144,7 +144,11 @@ Aureka 开源 Drug Design Engine（AF3 系扩散模型，Python 3.11-3.13，本�
        （compat 仅支持数据中心卡）。`device_count()=1 但 is_available()=False` 是典型信号（NVML 路径能见卡、CUDA init 失败）
     2. **修复 = `--gpus "device=<UUID>"` + `-e LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:...`**
        （LD_LIBRARY_PATH 优先于 ldconfig 缓存，强制 dlopen 拾取宿主 libcuda 550）。
-       `--runtime nvidia` 路径修不动，别再试
+       `--runtime nvidia` 路径修不动，别再试。
+       **变体（2026-09-21 实踩）**: 若注入目录里**同时**存在宿主 libcuda.so.550 与
+       compat 副本 libcuda.so.560（两版本同目录），LD_LIBRARY_PATH 无法消歧 →
+       **`-e LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libcuda.so.550.135` 钉死具体库**。
+       新机判别法: 容器内 `find / -name "libcuda.so*"` 看注入目录里有几个版本
     3. runtime 底座**缺 gcc/g++/python3-dev** → Triton JIT 编译 `Failed to find C compiler` → 补装后又有
        Python.h 缺失编译失败 → 必须 `apt-get install gcc g++ python3-dev` 后 `docker commit` 成补丁镜像。
        诊断口诀：**先看 `output/ERR/{job}.txt`**；log 里 "Seed X completed in 2.1s" 全是秒失败假象
@@ -218,8 +222,8 @@ python3 af3_dualaxis_postprocess.py --target mc2r \
 
 - E 集合规格：`ortho`（正构口袋）/ `accessible`（全胞外）/ 缓存段名（Extracellular/TM3…）/
   `u:a-b`（UniProt 区段自动映射构建体）/ `c:a-b`，逗号组合
-- **先过滤后聚类**（filter-then-cluster）：每样本 gate = epi_n=|R∩E|≥3 且 epi_frac=|R∩E|/|R|≥0.5
-  （epi_recall 仅注记）；过滤后池变小 → Wilson 下界自动惩罚小样本
+- **先过滤后聚类**（filter-then-cluster）：每样本 gate **v2 = (epi_n=|R∩E|≥3 且 epi_frac=|R∩E|/|R|≥0.5) 或 (epi_n ≥ ceil(0.84·|E|))**——第二支为深插入逃生支
+  （epi_recall 仅注记）；v1 纯 frac 门对深插姿态有足迹稀释偏见：宽骨架（VHH ~2500 Å²）塞入漏斗时非口袋接触随深度涨而分子|E|固定 → frac 天然贴 0.5；MC4R |E|=19 逃生阈 16、MC2R |E|=37 阈 32；实证 19/19 全覆盖样本 frac 仅 0.475 被 v1 误杀（gate v2 后 mc4r_3893 升双引擎 A）。过滤后池变小 → Wilson 下界自动惩罚小样本
 - D 类拆分 `d_reason`：no_pool=池空 / no_epitope=有样本但无一覆盖目标 epitope
 - `dom_epi_frac` 列 = 主导簇内过 gate 单元占比（标准模式下防"收敛在别处+少数打 epitope"被误读）
 
@@ -234,6 +238,7 @@ python3 af3_dualaxis_postprocess.py --target mc2r \
 | 聚类分支 | 勿按 ipTM 0.65 先拆互斥分支再聚类（B/C 证据错位）；用统一池+双轴解耦 |
 | 输出目录 | rep_poses 按靶分子子目录（两靶共用 --out 时防互删） |
 | Kabsch | 行向量约定 `M=U@D@Vt`, `t=qc-pc@M`（P@M+t≈Q）；实现后必须用受控测试验证残差 ~1e-14。**最低限度自检：同一文件对比 RMSD 必须为 0**（2026-09-17 实踩：diff 里重复加质心 yc，自检竟得 2.2 Å，排错半天；无自检的 RMSD 数字不可信） |
+| **CDR3 范围界定（⚠️ 用户长期规则）** | CDR3 边界必须**双法互检**：①锚定法——FR3 保守锚 YYC(A) 类起、FR4 锚 (W)G(GGG)/EGGG 类前止（VNAR 常见 YSCAQ/YYCAR 起、WGQ/WGE 前止）；②ANARCII 法——`<ANARCII_BIN> -t vnar`（transformer, v2.0.5, 本地 base env），IMGT 编号下 **CDR3 = 105–117**（含 111.x/112.x 插入码），118 起 FR4。Python API：`Anarcii(seq_type="vnar").number([seq])` 返回 dict（键 'Sequence 1'，含 numbering/score/chain_type），**方法名是 `number` 不是 `run`**；无 GPU 加 `-c/--cpu`；两法不一致以 ANARCII 为准并人工核对锚点。勿用传统 ANARCI（HMM 无鲨鱼 germline，识别不了 VNAR） |
 
 ## 6. 配套资产索引
 
@@ -245,3 +250,16 @@ python3 af3_dualaxis_postprocess.py --target mc2r \
 | 100-seed 批量输入 | `scripts/ (插件仓库相对路径; 实机部署时替换为本机 scripts 目录)build_af3_aneo_100seed_all.py` | 候选枚举→json 批量生成 |
 | 传输瘦身 | `scripts/ (插件仓库相对路径; 实机部署时替换为本机 scripts 目录)build_af3_aneo_100seed_slim.py` | MSA/模板拆包 75x 压缩 |
 | OpenDDE 仓库 | `<OPENDDE_DIR>`（venv 已装, CLI: `.venv/bin/opendde`） | pred/msa/prep/doctor |
+
+
+## 7. 交付包五道审核防线（⚠️ 2026-10-13 固化，筛选收官→人工核验前必过）
+
+实战教训链：手抄象限笔误×2 + fasta 计数把注释行算入 + 交付集漏新晋 A + 代表结构断软链 + 新晋候选漏能量。**全部防线程序化，禁止目检代替**：
+
+1. **序列层**：fasta 逐条对**设计输入 json 原文**比对（源头核对，不对中间汇总）；查重复 ID/序列
+2. **标签层**：象限/lb/iptm **程序化直出自 dualaxis CSV**，禁止手抄进 fasta/报告；报告-CSV 交叉抽查，内部矛盾=笔误信号
+3. **结构层**：结构内 binder 链序列 == fasta 逐条验证；交付前 `ls -L` 全软链实体化（指向远端的软链必断：主机A = `ssh -p <REMOTE_PORT> -i <DEPLOY_KEY_PATH> user@<REMOTE_HOST_A>`，主机B = 同 key 直连 `user@<REMOTE_HOST_B>`；真实地址见本地 handoff）
+4. **覆盖层**：gate/阈值变更后**所有批次同版本重跑**（漏批=旧指标混入，boltzgen 批漏 v2 致 3893 AF3 lb 低报 0.29）；交付集 vs 引擎全集数量对账；fasta 计数用 `startswith('>')` 勿用 `count('>')`
+5. **能量层**：新晋候选立即同协议补能量（PyRosetta env 用 AnewOmni py3.10；Schrodinger 数值在 out.csv 第 2 行）；rank 全量重排；双前缀归一化 `'mc4r_'+m.split('mc4r_')[-1]` 防 mc2r 混入
+
+**交付包标准结构**：`shortlist_structures/` = `candidates.fasta`（header：ID+组名+各引擎象限(lb,iptm)+len+dG+rank+mMG+注记，**排序=实验优先级**）+ `od_rep/`+`af3_rep/`（一一对应平铺命名）+ `relaxed_pdb/`；全指标总表（档/骨架/双引擎/双能量/口袋特征）入 handoff。
