@@ -1,7 +1,9 @@
 {
   "meta": {
     "created": "2026-09-20 17:55:40",
-    "plugin": "protein-drug-design"
+    "plugin": "protein-drug-design",
+    "updated": "2026-10-16",
+    "count": 46
   },
   "skills": {
     "academic-writing": {
@@ -768,6 +770,27 @@
           "decision": "absorb",
           "reason": "填补组学/临床图型库空白: 798 例 R 图谱(volcano/Manhattan/Circos/KM等)与现有绘图技能零管线重叠; 470KB 轻量; 已加边界声明与 nature-figure 分工",
           "compare_report": ""
+        }
+      ]
+    },
+    "periodic-review": {
+      "status": "active",
+      "date_added": "2026-10-16",
+      "source": "原生开发 (workspace 周期性回顾机制, 2026-10-15 建于 reviews/, 首期 W42 周报审计实证后技能化)",
+      "provenance": "",
+      "fm_desc_head": "description: 跨项目周期性回顾技能（周/月/季/年）。当用户说「周回顾」「月回顾」「季度回顾」「年度回顾」，或要求聚合各项目 handoff 进展、生成跨项目状态矩阵、盘点跨项目风险与 GPU 资源时使用。",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [
+        "触发词: 周回顾 / 月回顾 / 季度回顾 / 年度回顾",
+        "配套全局 user rule (rule-1792071071606) + project_memory PERIODIC-REVIEW RULE",
+        "元工作流技能 (与 research-dream/cognitive-profile 同类), 不入 workflow.yaml stages"
+      ],
+      "decisions": [
+        {
+          "ts": "2026-10-16",
+          "decision": "add",
+          "reason": "用户提出跨项目周期性回顾需求并确认入插件; 首期 W42 周报即抓到 cartfish 结论未落盘与 handoff 迁移缺口两处真实问题, 实证机制价值; 产物闭环 = 周报优先级为后续对话默认行动序"
         }
       ]
     }
