@@ -2,7 +2,7 @@
 
 English | [简体中文](README.md)
 
-A **full-chain** protein drug design skill plugin (v0.4.0, **45 skills**):
+A **full-chain** protein drug design skill plugin (v0.4.0, **47 skills**):
 
 - **Computation mainline** (4 in-house skills, empirically distilled): **sequence/structure identification → AI structure prediction & batch analysis → molecular dynamics validation → binding energy & mechanism deepening**
 - **Management & meta**: skill-manager (skill lifecycle governance)
@@ -17,7 +17,7 @@ protein-drug-design-plugin/
 ├── install.sh                        # Multi-IDE / desktop-agent installer
 ├── data/                             # Skill ledger + append-only audit log (skill-manager)
 ├── templates/skill-template/         # New-skill skeleton template
-└── skills/                           # 45 skills (incl. skill-manager)
+└── skills/                           # 47 skills (incl. skill-manager)
     ├── (computation mainline, 4)     # seq-struct-analysis / structure-prediction-analysis /
     │                                 # md-simulation-workflow / protein-design-workflow
     ├── (management, 1)               # skill-manager (add/merge/remove + ledger & audit)
@@ -122,7 +122,7 @@ The built-in `skill-manager` skill governs add/merge/remove for all plugin skill
 
 ## Changelog
 
-- **0.4.0** (2026-09-20): added the skill-manager lifecycle module (semi-automatic generation → compare-based absorb/merge/reject → ledger + audit; single/batch modes; all 45 skills registered).
+- **0.4.0** (2026-09-20): added the skill-manager lifecycle module (semi-automatic generation → compare-based absorb/merge/reject → ledger + audit; single/batch modes; all 47 skills registered).
 - **0.3.0** (2026-09-20): adopted the complete nature-skills suite (20 skills, bilingual descriptions); added multi-IDE/desktop installer `install.sh`; removed platform-bound world-threads-entry.
 - **0.2.0** (2026-09-20): adopted 20 research-chain skills (4 boundary statements), 6 full-chain stages registered.
 - **0.1.1** (2026-09-20): data-acquisition module (general + antibody–antigen + local SAbDab2 cache); ANARCII guidelines; endpoint sanitization.
