@@ -6,6 +6,9 @@
 
 ## 仓库结构
 
+端到端工作流管线图（mermaid，随 workflow.yaml 自动生成）：[docs/pipeline-viz.md](docs/pipeline-viz.md)
+
+
 ```text
 Academic-skills-and-plugin-development/
 ├── protein-drug-design-plugin/   # ★ 核心插件（44 技能，双语 README，安装即用）

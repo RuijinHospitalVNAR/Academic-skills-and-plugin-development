@@ -6,6 +6,9 @@ A repository for **Agent Skills plugin development** for research and protein dr
 
 ## Repository Layout
 
+End-to-end pipeline diagram (mermaid, auto-generated from workflow.yaml): [docs/pipeline-viz.md](docs/pipeline-viz.md)
+
+
 ```text
 Academic-skills-and-plugin-development/
 ├── protein-drug-design-plugin/   # ★ core plugin (44 skills, bilingual README, install-and-use)

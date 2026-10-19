@@ -793,6 +793,24 @@
           "reason": "用户提出跨项目周期性回顾需求并确认入插件; 首期 W42 周报即抓到 cartfish 结论未落盘与 handoff 迁移缺口两处真实问题, 实证机制价值; 产物闭环 = 周报优先级为后续对话默认行动序"
         }
       ]
+    },
+    "project-viz": {
+      "status": "active",
+      "date_added": "2026-10-19",
+      "source": "原生开发 (第47技能)",
+      "provenance": "",
+      "fm_desc_head": "description: >\n  项目进程可视化与 pipeline 示意图生成（Mermaid）。Use when 用户要看项目进度图/进程时间线、\n  handoff 可视化（把文字交接记录变成 timeline/gantt）、把复杂 pipeline/workflow 画成流程图或\n  思维导图、复盘项目演进、或",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-10-19 16:28:25",
+          "decision": "absorb",
+          "reason": "补进程/管线可视化真空: mermaid timeline/gantt/flowchart/mindmap 配方 + handoff→时间线、workflow→管线图两脚本(零依赖,已过断言+真实文件实测); 与 bizard/nature-figure 边界清晰",
+          "compare_report": ""
+        }
+      ]
     }
   }
 }
