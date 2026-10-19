@@ -37,8 +37,15 @@ description: >
 两个脚本都支持 `--inplace` 把图插入/刷新到 markdown 的 `<!-- PROGRESS-VIZ -->` 标记区
 （已存在则替换，不存在则插在首个二级标题后）。
 
-**维护约定（长期规则）**：每次 handoff 更新后，重跑 handoff_gantt.py --inplace 刷新进度图，
-让"文字记录 + 图形总览"始终同步。图是 handoff 的一部分，不是额外产物。
+**自动刷新（推荐）**：`scripts/auto_refresh.py` — 核对 handoff 轮次数与图内事件数，
+不一致自动刷新。已接入 git 钩子（本仓库 `.git/hooks/`）：
+- **post-commit**：每次提交后自动核对刷新仓库内全部 handoff*.md 进度图（本地文件，不入库）
+- **pre-commit**：workflow.yaml 有暂存变更时自动重生成 docs/pipeline-viz.md 并追加暂存
+- 其他仓库安装：把上述两段钩子脚本（见 SKILL.md 同目录 `auto_refresh.py` docstring）接入目标仓库 `.git/hooks/`
+- 设计原则：图表同步失败**只告警不阻塞**；安全门禁（secret-scan）永远第一道
+
+**维护约定（长期规则）**：handoff 更新后无需手动跑命令——下一次 commit 时钩子自动同步；
+急用时也可手动 `python3 scripts/auto_refresh.py --repo <repo>`。图是 handoff 的一部分，不是额外产物。
 
 ## 2. Mermaid 配方速查
 
