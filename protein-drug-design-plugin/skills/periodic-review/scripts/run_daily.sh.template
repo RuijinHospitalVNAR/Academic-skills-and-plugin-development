@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# daily_audit 定时入口模板。安装: 复制为 run_daily.sh, 将 AUDIT_BASE 改为实际审计根目录
+# (本工作区示例: <WORKSPACE_ROOT>/reviews/daily_audit; 设计文档默认: ~/research_audit)。
+# cron 追加安装 (勿覆盖已有 crontab):
+#   (crontab -l; echo '0 3 * * * /bin/bash <RUN_DAILY_PATH> >> <BASE>/logs/cron.log 2>&1') | crontab -
+set -euo pipefail
+BASE="${AUDIT_BASE:-$HOME/research_audit}"
+DATE="$(date +%F)"
+OUT="$BASE/reports/$DATE"
+exec 9>"$BASE/.audit.lock"
+flock -n 9 || exit 0
+python3 "$BASE/scripts/daily_audit.py" \
+  --config "$BASE/config/projects.txt" --out "$OUT" \
+  --max-files 100000 --hash-mb 8 --parse-mb 16
