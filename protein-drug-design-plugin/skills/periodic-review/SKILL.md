@@ -20,7 +20,7 @@ metadata: {"skillKey":"periodic-review","userInvocable":true}
 
 | 层 | 触发词 | 产物位置 | 状态 |
 |----|--------|----------|------|
-| 日 | 无（并入 handoff 更新规则） | 各项目 handoff | 长期生效 |
+| 日 | 「日审核」 | `reviews/daily_audit/reports/YYYY-MM-DD/audit.md`（cron 03:00 自动生成） | 已启用（2026-11-11 静态审计层） |
 | 周 | 「周回顾」 | `reviews/weekly/YYYY-Www.md`（ISO 周号，周一~周日） | 已启用 |
 | 月 | 「月回顾」 | `reviews/monthly/YYYY-MM.md` | 规划中 |
 | 季 | 「季度回顾」 | `reviews/quarterly/YYYY-Qn.md` | 规划中 |
@@ -34,8 +34,7 @@ metadata: {"skillKey":"periodic-review","userInvocable":true}
    （覆盖 AF3_prediction/A9_Multimer/A9_UricAcid 等深层）；pdd-plugin 双副本合并为一行。
 2. **逐份提取最新状态**：先 `stat` mtime 定活跃度，再按文件条目排序方向读尾段/头段；
    每份提取四项 = 最新日期 / 当前状态一句话 / 下一步 / 阻塞。mtime 只是线索，**内容才是真相**。
-3. **资源状态**：`nvidia-smi` 查在位卡与利用率，对照已知故障卡（GPU1=64c9e760 已物理移除、
-   GPU3=2efb78fa 有三次故障史，在位≠可用，调度前需短时压测）；检查 watchdog 与长任务状态。
+3. **资源状态**：`nvidia-smi` 查在位卡与利用率，GPU 台账以 project_memory「GPU FLEET」权威行为准（2026-10-25 8 卡新秩序，勿引用更早的禁用记录；启动前核实+按 UUID 绑定为不变量）；检查 watchdog 与长任务状态；**汇总本周 daily_audit 报告**（`reviews/daily_audit/reports/*/audit.md`）的 findings 计数与新异常，命中≠错误，异常项列风险区。
 4. **生成周报**：严格用 `reviews/weekly/_template.md` 栏目；状态矩阵按活跃度降序，停滞 ≥2 周标 ⚠。
 5. **风险交叉核对**：上一期周报风险区逐条闭环或滚动；对任何声称"已记录 handoff"的结论做落盘验证
    （grep 关键词到具体文件），发现缺口先补记再进报告。
