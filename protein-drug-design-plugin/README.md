@@ -20,8 +20,10 @@ protein-drug-design-plugin/
 └── skills/                           # 47 项技能（含 skill-manager 自管理）
     ├── (计算主线 4 项)               # seq-struct-analysis / structure-prediction-analysis /
     │                                 # md-simulation-workflow / protein-design-workflow
-    ├── (管理 1 项)                   # skill-manager（添加/合并/下架+台账审计）
-    ├── (科研全链路 19 项)              # academic-writing / scispark / experiment-design /
+    ├── (管理与元技能 5 项)           # skill-manager（添加/合并/下架+台账审计）/
+    │                                 # periodic-review（周期回顾+daily_audit）/ project-viz /
+    │                                 # cognitive-profile / research-dream
+    ├── (科研全链路 18 项)            # academic-writing / bizard / scispark / experiment-design /
     │                                 # statistical-analysis / papercheck / visual-deck-builder / ...
     └── (nature-skills 20 项)         # nature-writing / nature-reviewer / nature-paper-card /
                                       # nature-figure / nature-paper-to-patent / ...
@@ -42,14 +44,20 @@ protein-drug-design-plugin/
 
 **skill-manager** —— 技能生命周期管理：添加/合并/下架的半自动流程（对比分析后三选一决策）、台账与只追加审计日志、单个+批量双模式（详见下文专节）。
 
-### 全链路扩展（收编 39 项）
+**periodic-review** —— 跨项目周期性回顾（日/周/月/季/年五层，元工作流技能，不注册 workflow stages）：聚合各项目 `handoff-*.md` 生成周报状态矩阵（机器聚合区/用户决策区分离，最新周报「本周优先级」= 后续对话默认行动序）；月度优先级兑现率与教训升格审查；季度发表/交付锚点评估（前瞻层）；新会话冷启动协议。自带 `scripts/` 可移植 **daily_audit 三件套**（只读静态审计器 v1.1：cron 03:00 巡检产出物异常，`--since-days` 时间窗、BLAST 无表头 TSV 假阳治理、同文件去重；部署五步指引见 SKILL.md）。
+
+**project-viz** —— Mermaid 项目进程可视化：进度 gantt/timeline、pipeline/工作流示意图、handoff 文字→时间线复盘；pre-commit 钩子在 handoff 变更时自动刷新进度图。
+
+**cognitive-profile / research-dream** —— （收编）用户偏好画像渐进构建 / 科研记忆巩固（USER·SOUL·MEMORY + 周期"梦整理"）。
+
+### 全链路扩展（收编 38 项）
 
 | 类别 | 技能 |
 |---|---|
 | 文献与研究构思 | scispark、sci-employee-deep-research、giiisp-paper-search-apis、nature-academic-search、nature-literature-pipeline、nature-citation、nature-paper-card |
 | 研究设计与统计 | experiment-design（预注册/DOE/功效）、statistical-analysis、research-baseline-builder、nature-statistics、nature-experiment-log |
 | 学术写作与审查 | academic-writing、scientific-humanization、papercheck、thesis-audit-reviewer、nature-writing、nature-polishing、nature-reader、nature-reviewer、nature-response、nature-ref-verifier |
-| 成果展示与转化 | visual-deck-builder、practical-course-producer、manim-agent、giiisp-scientific-image-generation、nature-paper2ppt、nature-image2ppt、nature-figure、nature-paper-to-patent |
+| 成果展示与转化 | visual-deck-builder、bizard（798 例生物医学图表集）、practical-course-producer、manim-agent、giiisp-scientific-image-generation、nature-paper2ppt、nature-image2ppt、nature-figure、nature-paper-to-patent |
 | 申报与数据合规 | nature-proposal-writer、nature-data、nature-downloader |
 | 工具与元技能 | find-science-skills、skill-criticagent、mcp-criticagent、nature-shared |
 
@@ -122,6 +130,9 @@ FASTA ──[seq-struct-analysis]──> 家族归属+结构锚点
 
 ## 版本
 
+- **0.7.0** (2026-11-12)：periodic-review 深化为五层回顾——新增日层（daily_audit 可移植三件套 v1.1：--since-days 时间窗 / BLAST 无表头 TSV 假阳治理 / 同文件去重）、月/季/年程序、新会话冷启动协议；README 对账补登记（bizard / cognitive-profile / research-dream 入列，版本史 0.5-0.6 补录）。
+- **0.6.0** (2026-10-19)：新增 project-viz（#47，Mermaid 进度/管线可视化 + pre-commit 进度图自动刷新钩子）。
+- **0.5.0** (2026-10-08)：收编 bizard（openbiox/Bizard，CC-BY-NC，798 例生物医学图表集）；2026-10-15 periodic-review（#46，跨项目周期性回顾）入列沿此版本。
 - **0.4.0** (2026-09-20)：新增 skill-manager 技能生命周期管理模块（半自动生成→对比三选一→台账+审计，单个/批量双模式，47 项技能全部入账）。
 - **0.3.0** (2026-09-20)：收编 nature-skills 全部 20 项（description 双语化）；新增多 IDE/桌面 agent 适配器 `install.sh`；移除平台绑定的 world-threads-entry。
 - **0.2.0** (2026-09-20)：收编科研全链路 20 项技能（4 项加边界声明），workflow.yaml 注册 6 个全链路阶段。

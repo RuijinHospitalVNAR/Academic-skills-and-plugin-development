@@ -20,8 +20,9 @@ protein-drug-design-plugin/
 └── skills/                           # 47 skills (incl. skill-manager)
     ├── (computation mainline, 4)     # seq-struct-analysis / structure-prediction-analysis /
     │                                 # md-simulation-workflow / protein-design-workflow
-    ├── (management, 1)               # skill-manager (add/merge/remove + ledger & audit)
-    ├── (research chain, 19)         # academic-writing / scispark / experiment-design /
+    ├── (management & meta, 5)        # skill-manager / periodic-review / project-viz /
+    │                                 # cognitive-profile / research-dream
+    ├── (research chain, 18)          # academic-writing / bizard / scispark / experiment-design /
     │                                 # statistical-analysis / papercheck / visual-deck-builder / ...
     └── (nature-skills, 20)           # nature-writing / nature-reviewer / nature-paper-card /
                                       # nature-figure / nature-paper-to-patent / ...
@@ -42,14 +43,20 @@ protein-drug-design-plugin/
 
 **skill-manager** — skill lifecycle governance: semi-automatic add (compare-then-decide absorb/merge/reject), ledger + append-only audit log, single & batch modes (see dedicated section below).
 
-### Full-chain extensions (39 adopted)
+**periodic-review** — cross-project periodic review (daily/weekly/monthly/quarterly/annual; meta-workflow skill, not registered in workflow.yaml stages): aggregates per-project `handoff-*.md` into a weekly status matrix (machine-aggregated section vs. user-decision section kept separate; the latest weekly "priorities" act as the default action order for subsequent sessions); monthly priority-fulfillment audit & lesson-promotion review; quarterly publication/delivery anchor assessment (forward-looking layer); new-session cold-start protocol. Ships a portable **daily_audit trio** in `scripts/` (read-only static auditor v1.1: cron-03:00 output anomaly patrol with `--since-days` time window, headerless BLAST TSV false-positive guard, same-file dedup; 5-step deployment guide in SKILL.md).
+
+**project-viz** — Mermaid project-progress visualization: gantt/timeline progress charts, pipeline/workflow diagrams, handoff-text→timeline retrospectives; a pre-commit hook auto-refreshes the progress chart on handoff changes.
+
+**cognitive-profile / research-dream** — (adopted) incremental user-preference profiling / research memory consolidation (USER·SOUL·MEMORY + periodic "dream" consolidation).
+
+### Full-chain extensions (38 adopted)
 
 | Category | Skills |
 |---|---|
 | Literature & ideation | scispark, sci-employee-deep-research, giiisp-paper-search-apis, nature-academic-search, nature-literature-pipeline, nature-citation, nature-paper-card |
 | Design & statistics | experiment-design (preregistration/DOE/power), statistical-analysis, research-baseline-builder, nature-statistics, nature-experiment-log |
 | Writing & review | academic-writing, scientific-humanization, papercheck, thesis-audit-reviewer, nature-writing, nature-polishing, nature-reader, nature-reviewer, nature-response, nature-ref-verifier |
-| Presentation & translation | visual-deck-builder, practical-course-producer, manim-agent, giiisp-scientific-image-generation, nature-paper2ppt, nature-image2ppt, nature-figure, nature-paper-to-patent |
+| Presentation & translation | visual-deck-builder, bizard (798-example biomedical figure atlas), practical-course-producer, manim-agent, giiisp-scientific-image-generation, nature-paper2ppt, nature-image2ppt, nature-figure, nature-paper-to-patent |
 | Proposals & data compliance | nature-proposal-writer, nature-data, nature-downloader |
 | Tooling & meta | find-science-skills, skill-criticagent, mcp-criticagent, nature-shared |
 
@@ -122,6 +129,9 @@ The built-in `skill-manager` skill governs add/merge/remove for all plugin skill
 
 ## Changelog
 
+- **0.7.0** (2026-11-12): periodic-review deepened into the five-layer review — new daily layer (portable daily_audit trio v1.1: --since-days time window / headerless BLAST TSV false-positive guard / same-file dedup), monthly/quarterly/annual procedures, new-session cold-start protocol; README reconciliation (bizard / cognitive-profile / research-dream registered, 0.5–0.6 changelog backfilled).
+- **0.6.0** (2026-10-19): added project-viz (#47, Mermaid progress/pipeline visualization + pre-commit auto-refresh hook).
+- **0.5.0** (2026-10-08): adopted bizard (openbiox/Bizard, CC-BY-NC, 798-example biomedical figure atlas); periodic-review (#46, cross-project periodic review) joined on 2026-10-15 under this version.
 - **0.4.0** (2026-09-20): added the skill-manager lifecycle module (semi-automatic generation → compare-based absorb/merge/reject → ledger + audit; single/batch modes; all 47 skills registered).
 - **0.3.0** (2026-09-20): adopted the complete nature-skills suite (20 skills, bilingual descriptions); added multi-IDE/desktop installer `install.sh`; removed platform-bound world-threads-entry.
 - **0.2.0** (2026-09-20): adopted 20 research-chain skills (4 boundary statements), 6 full-chain stages registered.
