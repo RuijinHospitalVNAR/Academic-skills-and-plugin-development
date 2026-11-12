@@ -70,10 +70,8 @@ CUDA_VISIBLE_DEVICES=<GPU-UUID> python run_alphafold.py \
   > 3-logdir/batch_gpu$g.log 2>&1 &
 ```
 
-- **用 UUID 而非编号绑卡**（编号会因掉卡重排；UUID 稳定）：
-  `0=41a8314d, 2=8277e634, 4=cef1d233, 5=8d7c07fc(bc403), 6=8cac1199, 7=2c5fe720`
-- ⚠️ 本机 GPU1(64c9e760)/GPU3(2efb78fa) 已物理移除/永久禁用；**GPU5 为 MD 任务专用勿占**
-- 用卡前先 `nvidia-smi -L` 自检目标 UUID 存在
+- **用 UUID 而非编号绑卡**（编号会因掉卡重排；UUID 稳定）
+- GPU 在位状态以最新核实为准：**启动前先 `nvidia-smi -L` 自检**目标 UUID 存在再绑卡；台账以 project_memory「GPU FLEET」权威行为准（2026-10-25 起 8 卡全在位；更早的"GPU1/GPU3 移除/禁用"记录已撤销，勿引用）。历史快照 `0=41a8314d, 2=8277e634, 4=cef1d233, 5=8d7c07fc, 6=8cac1199, 7=2c5fe720` 仅作参考，用前须重新核实
 
 ### 2.4 性能实测与编译缓存
 
@@ -276,21 +274,21 @@ python3 af3_dualaxis_postprocess.py --target mc2r \
 | S0.5 triage | 二元 | **OD 单引擎**（Ab/Ag 微调强），5 seeds 起步 | OD-lb ipTM<0.4 弃；0.4-0.65 触发 25 seeds 复核 |
 | S1 双轴 | 二元 | AF3+OD 各 100 seeds | 姿态 dominant + gate v2（§5） |
 | S2 sanity | 二元 | — | 能量伪影只 flag 不排序（dG>+20 REU）；binder↔Gs 冲突预检 |
-| S3 三元效能 | 5 链 (+Gα/Gβ/Gγ) | **10 seeds × 5 samples = 50 samples**（与靶点天然激动剂基准同 N） | **gate = 相对联合组装占比**（pair(A-B)≥AB阈值 且 pair(R-Gα)≥0.5；AB阈值由 decoy 面板 95 分位定标，见 §8.2；BC-only=伪影，0071 实证 15 高样本 binder 漂离 20Å 且 seed 聚集）；候选点估计落入基准 CI → 自动升 100 samples |
+| S3 三元效能 | 5 链 (+Gα/Gβ/Gγ) | **50 seeds × 1 sample = 50 个独立样本**（同 seed 内 diffusion samples 输出基本一致、非独立，2026-11 实证，对齐 §2.1 `--num_diffusion_samples=1` 原则；与靶点天然激动剂基准同 N） | **gate = 相对联合组装占比**（pair(A-B)≥AB阈值 且 pair(R-Gα)≥0.5；AB阈值由 decoy 面板 95 分位定标，见 §8.2；BC-only=伪影，0071 实证 15 高样本 binder 漂离 20Å 且 seed 聚集）；候选点估计落入基准 CI → 自动升 100 seeds |
 | S3.5 消融探查（可选） | 二元仅非活性模板 | 25 seeds | **单向 assay**：通过=强内在激活证据；失败不结论（α-MSH 也坍缩 0/125） |
-| S4 能量+交接 | — | pyro+MMGBSA | 五道审核防线（§7） |
+| S4 能量+交接 | — | pyro + 静态 MM/GBSA（单结构能量，无 MD 轨迹） | 五道审核防线（§7） |
 
 ### 8.2 三元判读标尺（相对基准 + 非劣效，2026-10-19 校准）
 
 **基准是靶点实测值，不是普适常数**：MC4R 的 50%（25/50，[0.36, 0.65]）来自 α-MSH 原生肽 SYSMEHFRWGKPV 实测；GLP-1R 等其他靶点必须用自己的天然激动肽同协议实测（如 GLP-1(7-36)），**禁止沿用 50%**。
 
-- **判定量**：候选联合率 `p_cand = n(联合组装)/N`；同协议同 N 实测基准 `p_native`。
+- **判定量**：候选联合率 `p_cand = n(联合组装)/N`；同协议同 N 实测基准 `p_native`。**N 一律按独立 seeds 计**（同 seed 内 diffusion samples 输出基本一致、非独立，2026-11 实证；运行参数对齐 §2.1 `--num_diffusion_samples=1`，多 sample 只耗磁盘不增统计功效）。
 - **非劣效检验（主判据）**：δ = 0.20（允许比天然激动剂低 20 个百分点仍判同档）；`Newcombe` 差值 CI `(p_cand − p_native)` 的单侧 95% 下界 ≥ −δ → 判"激动级（非劣于天然）"。δ 是方法学预设界值，不随数据改；若实验证明 20 个百分点过宽/过严，须整靶点重定标尺。
 - **点估计档位（仅描述，不作判决）**：`p_cand ≥ p_native` 天然级；`p_native − δ ≤ p_cand < p_native` 弱激动倾向；`p_cand < p_native − δ` 非激动（仍须报 CI）。
 - **区间必须报**：`Clopper-Pearson` 精确 CI（禁用 Wald）；N=50 时 0.80 的 CI ≈ [0.66, 0.90]，0.50 的 CI ≈ [0.36, 0.65]——只有同 N 才可能判非劣。
-- **AB 阈值由 decoy 定标**：`pair(A-B) ≥ 0.5` 是经验值，对真 binder 零成本（α-MSH 组 50/50 全过）。用 2 个明确不结合靶点的 VHH（①无关 VHH，如 1MEL cAb-Lys3；②CDR 打乱但保留框架版）各 25 samples 跑 AF3 三元，取 decoy 的 95 分位作 AB 下限。结果表同时报两列：**硬联合率**（AB≥0.5，跨版本可比）与**软联合率**（AB≥decoy 下限，本靶点自校准）。
-- **过散检验**：报每 seed 联合率；`beta-binomial` 过散检验 + `ICC`。ICC 高（seed 聚集，如 0071 全高/全低）→ 加 seeds 而非加 samples；ICC 低 → 加 samples 提精度。
-- **决策规则前置**：候选点估计落入基准 CI 内 → 自动升 100 samples 复测，不做事后解释。
+- **AB 阈值由 decoy 定标**：`pair(A-B) ≥ 0.5` 是经验值，对真 binder 零成本（α-MSH 组 50/50 全过）。用 2 个明确不结合靶点的 VHH（①无关 VHH，如 1MEL cAb-Lys3；②CDR 打乱但保留框架版）各 25 seeds 跑 AF3 三元，取 decoy 的 95 分位作 AB 下限。结果表同时报两列：**硬联合率**（AB≥0.5，跨版本可比）与**软联合率**（AB≥decoy 下限，本靶点自校准）。
+- **过散检验**：报每 seed 联合率；`beta-binomial` 过散检验 + `ICC`。ICC 高（seed 聚集，如 0071 全高/全低）→ 加 seeds 复测；ICC 低 → 加 seeds 提精度。
+- **决策规则前置**：候选点估计落入基准 CI 内 → 自动升 100 seeds 复测，不做事后解释。
 - 高/低 pair 样本 TM6 差 ~1Å、corr(pair,S1)≈0.4-0.5 → 构象选择信号真实（引擎级结论，跨靶点复用）
 - S1 复合分客观化：熵权法/CRITIC 定权 + simplex 扰动扫描（Kendall τ）+ 帕累托前沿双轨；cAMP≥12 点后切 logistic 回归
 
@@ -314,7 +312,7 @@ python3 af3_dualaxis_postprocess.py --target mc2r \
 ### 8.5 对照面板（靶点级一次性资产，非每批成本）
 
 两级分离：**引擎级 QA**（跨靶点，MC4R 战役 2026-10-18/19 已定：OD 三元挤掉设计蛋白 binder、AF3 pair 有构象选择信号 corr≈0.45、多链接触数无区分力——结论永久复用，新靶点不重验）；**靶点级标尺**（每靶点一次性建立，~1-2h）：
-- MC4R 版：α-MSH 三元（50%，25/50，基准 N=50）+ SHU9119（阴性地板）+ pN162（蛋白激动剂，0.92 满格）+ 二元 TM6 基线（α-MSH/pN162 均不开 → 0094 型独家信号才有意义）+ **decoy 面板 2×25 samples**（无关 VHH 1MEL cAb-Lys3 + CDR 打乱/框架保留版，定 AB 阈值 95 分位）
+- MC4R 版：α-MSH 三元（50%，25/50，基准 N=50）+ SHU9119（阴性地板）+ pN162（蛋白激动剂，0.92 满格）+ 二元 TM6 基线（α-MSH/pN162 均不开 → 0094 型独家信号才有意义）+ **decoy 面板 2×25 seeds**（无关 VHH 1MEL cAb-Lys3 + CDR 打乱/框架保留版，定 AB 阈值 95 分位）
 - 新靶点模板（如 GLP-1R）：天然激动肽（GLP-1(7-36)）同 N 定 `p_native` + 经典拮抗肽（exendin(9-39)）定地板 + 二元 TM6 基线一次 + decoy 面板定 AB 阈值；无蛋白激动剂先例则该格缺位；基准值随靶点，禁止跨靶点沿用
 - **重跑触发（仅此四项，日常批次零对照成本）**：①引擎/checkpoint 版本 ②seeds/samples 协议 ③MSA 策略（如补 Gs MSA 后须重定基准）④模板集/构建体变更。同协议同输入读数可复现（seed 控制），标尺不漂移
 - **同型对照铁律**：肽对照不能定标蛋白 binder 的构象指标（本轮两次判读反转的根因）；肽线性化必须注记

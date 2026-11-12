@@ -107,16 +107,16 @@ description: 蛋白质药物设计端到端工作流编排器。Use when 用户�
 | S0.5 triage | 二元 | **OD 单引擎** (Ab/Ag 微调强), 5 seeds 起步 | OD-lb ipTM<0.4 弃; 0.4-0.65 触发 25 seeds 复核 |
 | S1 双轴 | 二元 | AF3+OD 各 100 seeds | 姿态 dominant + gate v2 |
 | S2 sanity | 二元 | — | 能量伪影只 flag 不排序 (dG>+20 REU); binder↔Gs 冲突预检 |
-| S3 三元效能 | 5 链 (+Gα/Gβ/Gγ) | **10 seeds × 5 samples = 50 samples** (与天然激动剂基准同 N) | **gate = 相对联合组装占比** (pair(A-B)≥AB阈值 且 pair(R-Gα)≥0.5; AB阈值由 decoy 面板 95 分位定标, 见 7.2; BC-only=伪影, 0071 实证 binder 漂离 20Å 且 seed 聚集)；候选点估计落入基准 CI → 自动升 100 samples |
+| S3 三元效能 | 5 链 (+Gα/Gβ/Gγ) | **50 seeds × 1 sample = 50 个独立样本** (同 seed 内 diffusion samples 输出基本一致、非独立, 2026-11 实证, 对齐结构技能 §2.1 `--num_diffusion_samples=1` 原则; 与天然激动剂基准同 N) | **gate = 相对联合组装占比** (pair(A-B)≥AB阈值 且 pair(R-Gα)≥0.5; AB阈值由 decoy 面板 95 分位定标, 见 7.2; BC-only=伪影, 0071 实证 binder 漂离 20Å 且 seed 聚集)；候选点估计落入基准 CI → 自动升 100 seeds |
 | S3.5 消融探查（可选） | 二元仅非活性模板 | 25 seeds | **单向 assay**：通过=强内在激活证据；失败不结论（α-MSH 也坍缩 0/125） |
-| S4 能量+交接 | — | pyro+MMGBSA | 五道审核防线 (§6) |
+| S4 能量+交接 | — | pyro + 静态 MM/GBSA (单结构能量, 无 MD 轨迹) | 五道审核防线 (§6) |
 
 ### 7.2 三元判读标尺 (相对基准 + 非劣效, 2026-10-19 校准)
 
-- **基准 = 靶点实测值, 非普适常数**: MC4R 的 50% (25/50, Clopper-Pearson [0.36, 0.65]) 来自 α-MSH 原生肽 SYSMEHFRWGKPV 50 samples; GLP-1R 等须用自身天然激动肽同协议同 N 实测 (如 GLP-1(7-36)), **禁止沿用 50%**
+- **基准 = 靶点实测值, 非普适常数**: MC4R 的 50% (25/50, Clopper-Pearson [0.36, 0.65]) 来自 α-MSH 原生肽 SYSMEHFRWGKPV 50 seeds (历史 10×5 协议实测); GLP-1R 等须用自身天然激动肽同协议同 N 实测 (如 GLP-1(7-36)), **禁止沿用 50%**
 - **非劣效检验 (主判据)**: δ=0.20 (允许比天然低 20 个百分点仍判同档); Newcombe 差值 CI (p_cand − p_native) 单侧 95% 下界 ≥ −δ → 激动级 (非劣于天然); 点估计档位仅描述不作判决; 一律报 Clopper-Pearson CI, 禁用 Wald
-- **AB 阈值由 decoy 定标**: 2 个不结合靶点的 VHH (无关 VHH 1MEL cAb-Lys3 + CDR 打乱/框架保留版) 各 25 samples, 取 95 分位作下限; 结果表同报硬联合率 (AB≥0.5) 与软联合率 (AB≥decoy 下限)
-- **过散检验**: 报每 seed 联合率 + beta-binomial 过散检验 + ICC; ICC 高 (seed 聚集, 如 0071 全高/全低) → 加 seeds, ICC 低 → 加 samples; 点估计落入基准 CI → 自动升 100 samples
+- **AB 阈值由 decoy 定标**: 2 个不结合靶点的 VHH (无关 VHH 1MEL cAb-Lys3 + CDR 打乱/框架保留版) 各 25 seeds, 取 95 分位作下限; 结果表同报硬联合率 (AB≥0.5) 与软联合率 (AB≥decoy 下限)
+- **过散检验**: 报每 seed 联合率 + beta-binomial 过散检验 + ICC; ICC 高 (seed 聚集, 如 0071 全高/全低) → 加 seeds 复测, ICC 低 → 加 seeds 提精度; 点估计落入基准 CI → 自动升 100 seeds
 - corr(pair,S1)≈0.4-0.5 + 高/低 pair 样本 TM6 差 ~1Å (跨对照与候选一致) → 构象选择信号真实, pair 承载激活信息
 - S1 复合分客观化: 熵权法/CRITIC + simplex 扰动扫描 (Kendall τ) + 帕累托前沿双轨; cAMP≥12 点后切 logistic
 
@@ -134,4 +134,4 @@ description: 蛋白质药物设计端到端工作流编排器。Use when 用户�
 
 ### 7.4 对照面板 (靶点级一次性资产, 非每批成本)
 
-两级分离: **引擎级 QA** (跨靶点, MC4R 战役 2026-10 已定, 结论永久复用): OD 三元挤掉设计蛋白 binder、AF3 pair 有构象选择信号、多链接触数无区分力、消融是单向 assay — 新靶点不重验。**靶点级标尺** (每靶点一次性, ~1-2h): 天然激动肽同 N 定 p_native (MC4R: α-MSH 25/50 = 0.50) + 拮抗肽定地板 + 二元 TM6 基线一次 + **decoy 面板 2×25 samples** (无关 VHH 1MEL cAb-Lys3 + CDR 打乱/框架保留版) 定 AB 阈值 95 分位; GLP-1R 例: GLP-1(7-36) + exendin(9-39); 基准值禁止跨靶点沿用。**重跑触发仅四项** (日常批次零对照成本): ①引擎/checkpoint 版本 ②seeds 协议 ③MSA 策略 ④模板集/构建体变更。**同型铁律**: 肽对照不能定标蛋白 binder 构象指标; 肽线性化须注记。
+两级分离: **引擎级 QA** (跨靶点, MC4R 战役 2026-10 已定, 结论永久复用): OD 三元挤掉设计蛋白 binder、AF3 pair 有构象选择信号、多链接触数无区分力、消融是单向 assay — 新靶点不重验。**靶点级标尺** (每靶点一次性, ~1-2h): 天然激动肽同 N 定 p_native (MC4R: α-MSH 25/50 = 0.50) + 拮抗肽定地板 + 二元 TM6 基线一次 + **decoy 面板 2×25 seeds** (无关 VHH 1MEL cAb-Lys3 + CDR 打乱/框架保留版) 定 AB 阈值 95 分位; GLP-1R 例: GLP-1(7-36) + exendin(9-39); 基准值禁止跨靶点沿用。**重跑触发仅四项** (日常批次零对照成本): ①引擎/checkpoint 版本 ②seeds 协议 ③MSA 策略 ④模板集/构建体变更。**同型铁律**: 肽对照不能定标蛋白 binder 构象指标; 肽线性化须注记。
