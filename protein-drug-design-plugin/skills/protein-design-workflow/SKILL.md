@@ -94,3 +94,44 @@ description: 蛋白质药物设计端到端工作流编排器。Use when 用户�
 
 **交付包标准结构** (人工审核友好): `{项目}/shortlist_structures/` 下 = `candidates.fasta` (统一 header: ID + 组名 + 各引擎象限(lb,iptm) + len + dG+rank + mMG + 注记, **排序=实验优先级**) + `od_rep/`+`af3_rep/` (与 fasta 一一对应, 平铺命名 `{cand}.cif`) + `relaxed_pdb/`; 全指标 markdown 总表入 handoff (档位/骨架/双引擎/双能量/口袋特征)。
 **建议节奏**: 设计→筛选周期收官时, 交付包生成→五道防线→人工核验 三段式; 防线脚本化后每次 <10 min。
+
+## 7. GPCR 功能性 binder 筛选级联 Pipeline v3 (2026-10-18 对照实验校准后定稿)
+
+**适用**: 设计 GPCR 激动剂/拮抗剂 binder 的全链路筛选。核心原则: **效价 (激活/抑制) 判定与亲和力判定分轨** — 亲和看双轴置信, 效价看三元 Gs 偶联, 模板回声用消融排除。详见 structure-prediction-analysis §8。
+
+### 7.1 级联结构 (计算量从小到大, 废候选早出局)
+
+| 阶段 | 体系 | 引擎/seeds | gate |
+|---|---|---|---|
+| S0 生成 | **二元** (binder+受体) | boltzgen/AnewOmni | — (三元生成归因混淆+成本 1.6×, 禁) |
+| S0.5 triage | 二元 | **OD 单引擎** (Ab/Ag 微调强), 5 seeds 起步 | OD-lb ipTM<0.4 弃; 0.4-0.65 触发 25 seeds 复核 |
+| S1 双轴 | 二元 | AF3+OD 各 100 seeds | 姿态 dominant + gate v2 |
+| S2 sanity | 二元 | — | 能量伪影只 flag 不排序 (dG>+20 REU); binder↔Gs 冲突预检 |
+| S3 三元效能 | 5 链 (+Gα/Gβ/Gγ) | **10 seeds × 5 samples = 50 samples** (与天然激动剂基准同 N) | **gate = 相对联合组装占比** (pair(A-B)≥AB阈值 且 pair(R-Gα)≥0.5; AB阈值由 decoy 面板 95 分位定标, 见 7.2; BC-only=伪影, 0071 实证 binder 漂离 20Å 且 seed 聚集)；候选点估计落入基准 CI → 自动升 100 samples |
+| S3.5 消融探查（可选） | 二元仅非活性模板 | 25 seeds | **单向 assay**：通过=强内在激活证据；失败不结论（α-MSH 也坍缩 0/125） |
+| S4 能量+交接 | — | pyro+MMGBSA | 五道审核防线 (§6) |
+
+### 7.2 三元判读标尺 (相对基准 + 非劣效, 2026-10-19 校准)
+
+- **基准 = 靶点实测值, 非普适常数**: MC4R 的 50% (25/50, Clopper-Pearson [0.36, 0.65]) 来自 α-MSH 原生肽 SYSMEHFRWGKPV 50 samples; GLP-1R 等须用自身天然激动肽同协议同 N 实测 (如 GLP-1(7-36)), **禁止沿用 50%**
+- **非劣效检验 (主判据)**: δ=0.20 (允许比天然低 20 个百分点仍判同档); Newcombe 差值 CI (p_cand − p_native) 单侧 95% 下界 ≥ −δ → 激动级 (非劣于天然); 点估计档位仅描述不作判决; 一律报 Clopper-Pearson CI, 禁用 Wald
+- **AB 阈值由 decoy 定标**: 2 个不结合靶点的 VHH (无关 VHH 1MEL cAb-Lys3 + CDR 打乱/框架保留版) 各 25 samples, 取 95 分位作下限; 结果表同报硬联合率 (AB≥0.5) 与软联合率 (AB≥decoy 下限)
+- **过散检验**: 报每 seed 联合率 + beta-binomial 过散检验 + ICC; ICC 高 (seed 聚集, 如 0071 全高/全低) → 加 seeds, ICC 低 → 加 samples; 点估计落入基准 CI → 自动升 100 samples
+- corr(pair,S1)≈0.4-0.5 + 高/低 pair 样本 TM6 差 ~1Å (跨对照与候选一致) → 构象选择信号真实, pair 承载激活信息
+- S1 复合分客观化: 熵权法/CRITIC + simplex 扰动扫描 (Kendall τ) + 帕累托前沿双轨; cAMP≥12 点后切 logistic
+
+### 7.3 红线禁令 (对照实验实证)
+
+1. **混合活性/非活性模板的二元 S1 不得作效价结论** — 受体构象跟随模板组成而非 binder (0094 实证: 4 模板 S1 0.842 → 仅 6W25 模板时 0.324, TM6 9.0Å 全闭); **消融是单向 assay** — α-MSH 天然激动肽也坍缩 (S1 0.308, 0/125), 消融失败不能证伪; 仅"超出肽参照的激活尾巴"可作加分项
+2. **多链预测接触数无区分力** — 模型必须摆出所有链 ("Gs 搭上去"是输出假象); 读数用 chain_pair_iptm; 弱偶联体系的 binder-Gs 2-3Å "冲突"是链错位退化, 非真拮抗
+3. **三元 S1 只记录不作 gate** (Gs+活性模板把全员压到 0.77-0.80, 基线 0.738)
+4. 三元 Gs 链配 MSA (裸序列压低绝对校准; 候选间相对比较不受影响)
+5. 肽对照线性化须诚实注记 (丢环化/D-残基 → setmelo/shu 线性版仅差 1 残基, 阴性弱); α-MSH 原生序列是唯一精确标尺; 真肽用 CCD 编码
+6. **AB 阈值 0.5 不得默认使用** — 每靶点须用 decoy 面板定标 (7.2); 未定标前只报硬/软双列并注明阈值来源, 不得据此判死候选
+7. **小样本不得单独定罪** — 25 samples/5 seeds 量级不足 (0071 消融 3/5 的 Wilson CI ≈ [0.23, 0.88]); 判死/判活一律走非劣效 CI + 过散检验, 必要时先加 seed 复测
+
+**工具链**: build_ternary_inputs.py (5 链 json, 顶层 dict+dialect alphafold3) / ternary_postprocess.py / build_ctrl_inputs.py + ctrl_postprocess.py (对照与消融)。链级模板机制: templates 挂 query 链只约束该链自身构象, 链间摆放靠模型训练先验。
+
+### 7.4 对照面板 (靶点级一次性资产, 非每批成本)
+
+两级分离: **引擎级 QA** (跨靶点, MC4R 战役 2026-10 已定, 结论永久复用): OD 三元挤掉设计蛋白 binder、AF3 pair 有构象选择信号、多链接触数无区分力、消融是单向 assay — 新靶点不重验。**靶点级标尺** (每靶点一次性, ~1-2h): 天然激动肽同 N 定 p_native (MC4R: α-MSH 25/50 = 0.50) + 拮抗肽定地板 + 二元 TM6 基线一次 + **decoy 面板 2×25 samples** (无关 VHH 1MEL cAb-Lys3 + CDR 打乱/框架保留版) 定 AB 阈值 95 分位; GLP-1R 例: GLP-1(7-36) + exendin(9-39); 基准值禁止跨靶点沿用。**重跑触发仅四项** (日常批次零对照成本): ①引擎/checkpoint 版本 ②seeds 协议 ③MSA 策略 ④模板集/构建体变更。**同型铁律**: 肽对照不能定标蛋白 binder 构象指标; 肽线性化须注记。
