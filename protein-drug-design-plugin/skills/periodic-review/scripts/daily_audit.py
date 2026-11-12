@@ -7,6 +7,8 @@ LOG_EXT={'.log','.out','.err','.stderr','.stdout'}
 DATA_EXT={'.csv','.tsv','.json','.jsonl'}
 DOC_EXT={'.md','.txt'}
 MODEL_EXT={'.pdb','.cif','.mmcif','.pt','.pth','.safetensors'}
+# 空文件不报警的后缀: .err 为空表示无 stderr 输出(正常); pipeline.log 类占位日志通常为空属正常
+EMPTY_NOISY_EXT={'.err'}
 PATTERNS=[('OOM',re.compile(r'out of memory|cuda out of memory|oom-kill|killed process',re.I)),('TRACEBACK',re.compile(r'Traceback \(most recent call last\)|^\s*(?:ValueError|RuntimeError|KeyError|AssertionError|FileNotFoundError):',re.I)),('NUMERIC',re.compile(r'\b(?:nan|inf|infinity)\b',re.I)),('FAIL',re.compile(r'\b(?:segmentation fault|fatal error|failed to converge)\b',re.I))]
 IGNORE={'.git','.venv','venv','env','node_modules','__pycache__','.cache','site-packages'}
 
@@ -24,7 +26,7 @@ def tail(path, limit=131072):
 def scan_file(path, max_hash, max_data):
     s=path.stat(); entry={'path':str(path),'bytes':s.st_size,'modified_utc':dt.datetime.fromtimestamp(s.st_mtime,dt.timezone.utc).isoformat(),'sha256':sha256(path,max_hash)}
     issues=[]; ext=path.suffix.lower()
-    if s.st_size==0 and ext in LOG_EXT|DATA_EXT|MODEL_EXT:issues.append({'severity':'warning','code':'EMPTY_FILE','path':str(path),'evidence':'0 bytes'})
+    if s.st_size==0 and ext in (LOG_EXT-EMPTY_NOISY_EXT)|DATA_EXT|MODEL_EXT:issues.append({'severity':'warning','code':'EMPTY_FILE','path':str(path),'evidence':'0 bytes'})
     if ext in LOG_EXT and s.st_size:
         for i,line in enumerate(tail(path),1):
             for name,pat in PATTERNS:
@@ -36,10 +38,24 @@ def scan_file(path, max_hash, max_data):
         try:
             with path.open(encoding='utf-8-sig',newline='') as f:
                 reader=csv.reader(f,delimiter='\t' if ext=='.tsv' else ','); header=next(reader,None)
+                # 跳过 R 风格 # 注释行(统计脚注/说明, 非表头)
+                while header and header[0].startswith('#'):header=next(reader,None)
+                # 单字段首行通常是标题行(如中文标题)而非表头, 取下一行作真表头
+                if header and len(header)==1:
+                    nxt=next(reader,None)
+                    if nxt is not None and len(nxt)>1:header=nxt
                 if header:
-                    if len(header)!=len(set(header)):issues.append({'severity':'warning','code':'DUPLICATE_HEADERS','path':str(path),'evidence':str(header[:30])})
+                    # 检测无表头表格(如 BLAST -outfmt 6): 第3列若是数值则视为数据行, 跳过表头重复检查
+                    is_headerless = False
+                    if len(header)>=3:
+                        try:
+                            float(header[2]); is_headerless=True
+                        except (ValueError, IndexError):
+                            pass
+                    if not is_headerless and len(header)!=len(set(header)):issues.append({'severity':'warning','code':'DUPLICATE_HEADERS','path':str(path),'evidence':str(header[:30])})
                     n=0
                     for row in reader:
+                        if row and row[0].startswith('#'):continue
                         n+=1
                         if len(row)!=len(header):
                             issues.append({'severity':'warning','code':'ROW_WIDTH','path':str(path),'evidence':f'row {n+1}: {len(row)} fields vs {len(header)} headers'})
@@ -53,7 +69,9 @@ def scan_file(path, max_hash, max_data):
     return entry,issues
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--config',required=True);p.add_argument('--out',required=True);p.add_argument('--max-files',type=int,default=100000);p.add_argument('--hash-mb',type=int,default=8);p.add_argument('--parse-mb',type=int,default=16);a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--config',required=True);p.add_argument('--out',required=True);p.add_argument('--max-files',type=int,default=100000);p.add_argument('--hash-mb',type=int,default=8);p.add_argument('--parse-mb',type=int,default=16);p.add_argument('--since-days',type=float,default=1.0,help='只报告最近 N 天内修改的文件的异常 (0=全部)');a=p.parse_args()
+    now_ts=dt.datetime.now(dt.timezone.utc).timestamp()
+    since_ts=now_ts - a.since_days*86400 if a.since_days>0 else 0.0
     roots=[]
     for line in Path(a.config).read_text(encoding='utf-8').splitlines():
         line=line.strip()
@@ -70,17 +88,30 @@ def main():
                 if path.is_symlink():continue
                 try:
                     if not stat.S_ISREG(path.stat().st_mode):continue
+                    # 时间过滤: 只扫描 since_days 内修改的文件 (0=全部)
+                    if since_ts>0 and path.stat().st_mtime < since_ts:continue
                     entry,found=scan_file(path,a.hash_mb*1024*1024,a.parse_mb*1024*1024)
                     records.append(entry);issues.extend(found);count+=1
                 except (OSError,UnicodeError) as e:issues.append({'severity':'warning','code':'FILE_READ','path':str(path),'evidence':str(e)})
                 if count>=a.max_files:issues.append({'severity':'warning','code':'FILE_LIMIT','path':str(root),'evidence':f'limit {a.max_files} reached'});break
             if count>=a.max_files:break
         if count>=a.max_files:break
+    # 去重: 同一文件同一 code 合并为一条 (evidence 取首条, 标注重复次数)
+    deduped={}
+    for it in issues:
+        key=(it.get('path',''),it.get('code',''))
+        if key not in deduped:
+            deduped[key]=dict(it); deduped[key]['count']=1
+        else:
+            deduped[key]['count']+=1
+    issues=list(deduped.values())
     now=dt.datetime.now(dt.timezone.utc).isoformat()
     report={'generated_utc':now,'roots':[str(r) for r in roots],'files_scanned':len(records),'issues':issues,'files':records,'limitations':['No scientific metric recomputation or conclusion validation','Log keyword matches require human review','Files above size thresholds are not hashed or parsed','Only accessible regular files; symlinks skipped']}
     (out/'audit.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
     lines=['# Research daily audit',f'Generated UTC: {now}',f'Files scanned: {len(records)}',f'Issues: {len(issues)}','','## Findings']
-    for item in issues[:300]:lines.append(f"- **{item['severity']} / {item['code']}** `{item['path']}` — {item['evidence'].replace(chr(10),' ')[:240]}")
+    for item in issues[:300]:
+        cnt=f" (x{item['count']})" if item.get('count',1)>1 else ""
+        lines.append(f"- **{item['severity']} / {item['code']}** `{item['path']}`{cnt} — {item['evidence'].replace(chr(10),' ')[:240]}")
     if len(issues)>300:lines.append(f'- {len(issues)-300} more findings in audit.json')
     lines+=['','## Scope and limitations','This is a static inventory and heuristic check, not a full scientific audit. No project files were modified.']
     (out/'audit.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
