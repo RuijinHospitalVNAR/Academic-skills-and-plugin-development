@@ -61,9 +61,11 @@ description: "蛋白质结构预测批量部署与结果分析技巧集（Mol-1/
 ```bash
 CUDA_VISIBLE_DEVICES=<g> bash <WORKSPACE_ROOT>/Mol-1/run_mol.sh pred \
     -i <job_list.json> -o <outdir> \
-    --use_template false --use_seeds_in_json true --use_msa true --sample 1
+    --use_template false --use_seeds_in_json true --use_msa true --sample 1 \
+    --need_atom_confidence true
 ```
 - ⚠️ **`--use_seeds_in_json true` 必带**：默认 seeds=101 忽略 JSON modelSeeds（2026-11-04 踩坑）
+- ⚠️ **`--need_atom_confidence true` 必带（2026-11-17 GLP11R 踩坑，用户纠正）**：控制 dumper 落盘 `*_full_data_sample_<k>.json`（含 per-residue **PAE 矩阵** + plDDT）。漏掉则输出只有 cif+summary 标量，**ipSAE 无法计算**——曾误判为"引擎输出格式不含 PAE"，实际是本开关遗漏（TNFR1 实证：full_data → tools/ipsae.py 官方口径 ipSAE，C0.5 ipTM/ipSAE 双轴即由此而来；dumper.py L265-281）。任何需要 ipSAE/PAE 的分析（双轴弃置、ipAE 代理、界面误差图）都必须带此开关
 - **`--sample 1`**：sample 伪重复 ICC 实证（统计单位=seed，同预算 seeds×1.8-2）
 - `--use_msa`：输入已带全 MSA 路径时无影响；binder 库批量建议显式 false + 预置 a3m（本地 server 免排队）
 - 性能（4090 实测）：175tok ~62s/seed、644tok ~150s/seed；峰值显存 4.6-13GB，24G 卡单卡可并行 1-3 job
@@ -74,6 +76,7 @@ CUDA_VISIBLE_DEVICES=<g> bash <WORKSPACE_ROOT>/Mol-1/run_mol.sh pred \
 <out>/<job>/seed_<s>/predictions/
     <job>_sample_<k>.cif                          # 结构, 样本按 ranking_score 降序 (sample_0 最优)
     <job>_summary_confidence_sample_<k>.json      # iptm/ptm/ranking_score/chain_plddt/has_clash...
+    <job>_full_data_sample_<k>.json               # ⚠️ 仅当 --need_atom_confidence true: per-residue PAE + plDDT (ipSAE 原料)
 ```
 ⚠️ [待校准/待实证] ① summary 的 chain_pair_iptm 字段有无待确认（S3 三元 gate 依赖，无则从 full_data PAE 算）；② 链序是否 A=binder B=受体（AF3 实证 A=binder，Mol-1 未验）；③ 输出是否含近接触假象（AF3 无弛豫 2.0-2.5Å 近接触，Mol-1 待测——clash 硬剔 <1.5Å 沿用，<2.5Å 剔除判据 [待校准]）
 
@@ -86,6 +89,11 @@ CUDA_VISIBLE_DEVICES=<g> bash <WORKSPACE_ROOT>/Mol-1/run_mol.sh pred \
 | sm_89 警告 | doctor 报 RTX4090 "NOT SUPPORTED"——实为 sm_86 二进制兼容可跑，已实证 |
 | 进程清理 | 本机存在外部进程清理（setsid 也被杀，无 OOM 痕迹）；长任务用工具托管后台或 nohup 前台快返回 + 30s 后 `nvidia-smi --query-compute-apps=pid` 验证上 GPU |
 | MSA server 冷启动 | 重启后首查询慢（page cache 预热）属正常；跑一条热身序列 |
+| **PAE/full_data 缺失**（2026-11-17）| 命令漏 `--need_atom_confidence true` → 只落盘 cif+summary，ipSAE 不可算且易误诊为"引擎不支持"；**凡涉及 ipSAE/PAE 的分析，启动命令必带此开关**（见 §2.3） |
+| JSON schema 用 AF3 `proteinChain` | **mol 原生 dialect 才读 `modelSeeds`**（`protein` 平铺字段）；AF3 兼容层 `proteinChain` 格式下 modelSeeds 被忽略 → 每 job 只跑 1 个默认 seed（2026-11-17 GLP1R triage 实证：d00002/d00450 同跑 seed 19090）|
+| **输入 json 顶层必须任务列表**（2026-11-20）| 单任务也要 `[j]` 包裹——顶层 dict 被 msa_search 遍历 key 出 `TypeError: string indices`，每 job ~36s 快速失败全灭（102 348 job 实证 3.5h 全军覆没）；**本机多任务 shard 天然合规会掩盖此坑，单任务拆分文件必查顶层类型** |
+| **全局 seed 池机制**（2026-11-20）| `--use_seeds_in_json` 只取 `json_data[0].modelSeeds` 作全局池，所有 job 共用（inference.py:579）；各 job 自身 modelSeeds（除首）被忽略——混合池 shard 会超配（GLP1R shard2 池50 混入 T2 池15 job → 51 个超配 +1,785 seeds，多算不错杀）；精确 seeds 语义用单任务拆分 |
+| **远端放量前三验**（2026-11-20）| ①1 job 冒烟：首 job 产出 cif+summary 双件后才推全量；②宣布部署/启动成功必须三验（pgrep 进程 + ls 产物 + 日志尾部），不许凭发射动作宣布完成；③跨会话部署状态以远端实测为准，不信本地记忆。五类失误全案见 GLP1R handoff「Agent 行为教训索引」 |
 
 ### 2.6 AF3 归档段（已退役→保险丝，触发条件见 workflow §7.5）
 
@@ -99,7 +107,7 @@ CUDA_VISIBLE_DEVICES=<g> bash <WORKSPACE_ROOT>/Mol-1/run_mol.sh pred \
 2. **独立预测**：用 `protenix-v2`（9/4 已验证跨模型续跑安全）
    ⚠️ 独立批量部署参数（MSA 预计算入口/多卡分发）以官方 `protenix --help` 与 docs 为准，本 skill 暂未固化
 
-## 4. OpenDDE v1.1.1（<OPENDDE_DIR>）
+## 4. OpenDDE v1.1.1（<TOOLS_ROOT>/OpenDDE-git）
 
 Aureka 开源 Drug Design Engine（AF3 系扩散模型，Python 3.11-3.13，本地 venv 已装好）。
 
@@ -136,7 +144,7 @@ Aureka 开源 Drug Design Engine（AF3 系扩散模型，Python 3.11-3.13，本�
     2. **修复 = `--gpus "device=<UUID>"` + `-e LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:...`**
        （LD_LIBRARY_PATH 优先于 ldconfig 缓存，强制 dlopen 拾取宿主 libcuda 550）。
        `--runtime nvidia` 路径修不动，别再试。
-       **变体（2026-09-21 远端B 实踩）**: 若注入目录里**同时**存在宿主 libcuda.so.550 与
+       **变体（2026-09-21 18.74 实踩）**: 若注入目录里**同时**存在宿主 libcuda.so.550 与
        compat 副本 libcuda.so.560（两版本同目录），LD_LIBRARY_PATH 无法消歧 →
        **`-e LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libcuda.so.550.135` 钉死具体库**。
        新机判别法: 容器内 `find / -name "libcuda.so*"` 看注入目录里有几个版本
@@ -229,7 +237,7 @@ python3 af3_dualaxis_postprocess.py --target mc2r \
 | 聚类分支 | 勿按 ipTM 0.65 先拆互斥分支再聚类（B/C 证据错位）；用统一池+双轴解耦 |
 | 输出目录 | rep_poses 按靶分子子目录（两靶共用 --out 时防互删） |
 | Kabsch | 行向量约定 `M=U@D@Vt`, `t=qc-pc@M`（P@M+t≈Q）；实现后必须用受控测试验证残差 ~1e-14。**最低限度自检：同一文件对比 RMSD 必须为 0**（2026-09-17 实踩：diff 里重复加质心 yc，自检竟得 2.2 Å，排错半天；无自检的 RMSD 数字不可信） |
-| **OD rep 姿态必须拉回本地实体** | OD 与 AF3 结构不同，交叉核验/效能分析需双引擎姿态；所有 OD 选出的 rep cif 一律 tar 流式拉回（远端打包→本地解压，软链目标 <REMOTE_MIRROR_DIR> 本机同路径落实体；远端A(<REMOTE_HOST>) 走 -p <REMOTE_PORT>+<DEPLOY_KEY_PATH>，远端B(<REMOTE_HOST2>) 同 key 直连），交付前 `ls -L` 验证（2026-10-15 用户规则，一次性清零 361 断链） |
+| **OD rep 姿态必须拉回本地实体** | OD 与 AF3 结构不同，交叉核验/效能分析需双引擎姿态；所有 OD 选出的 rep cif 一律 tar 流式拉回（远端打包→本地解压，软链目标 /data/rcdb 本机同路径落实体；253.60 走 -p 10021+deploy_key，18.74 同 key 直连），交付前 `ls -L` 验证（2026-10-15 用户规则，一次性清零 361 断链） |
 | **BW/残基编号身份校验** | 跨编号体系取残基（构建体 vs UniProt vs BW）时**必须校验氨基酸身份**：同号残基常是不同残基（实测构建体147=ILE 被 UniProt R147 误用、构建体258=GLU 被当 W258，S1 微开关整表作废教训）；正确做法 = c2u 映射候选 + `get_resname()==期望值` 双重校验，都不符返回 None（region_cache 的 c2u 是桥接权威） |
 | **CDR3 范围界定（⚠️ 用户长期规则）** | CDR3 边界必须**双法互检**：①锚定法——FR3 保守锚 YYC(A) 类起、FR4 锚 (W)G(GGG)/EGGG 类前止（VNAR 常见 YSCAQ/YYCAR 起、WGQ/WGE 前止）；②ANARCII 法——`<HOME>/anaconda3/bin/anarcii -t vnar`（transformer, v2.0.5, 本地 base env），IMGT 编号下 **CDR3 = 105–117**（含 111.x/112.x 插入码），118 起 FR4。Python API：`Anarcii(seq_type="vnar").number([seq])` 返回 dict（键 'Sequence 1'，含 numbering/score/chain_type），**方法名是 `number` 不是 `run`**；无 GPU 加 `-c/--cpu`；两法不一致以 ANARCII 为准并人工核对锚点。勿用传统 ANARCI（HMM 无鲨鱼 germline，识别不了 VNAR） |
 
@@ -245,8 +253,8 @@ python3 af3_dualaxis_postprocess.py --target mc2r \
 | 膜侧几何判定 | `<WORKSPACE_ROOT>/scripts/validate_epitope_side.py` | 参考系构建 + binder 胞外/膜/胞内投影 |
 | 100-seed 批量输入 | `<WORKSPACE_ROOT>/scripts/build_af3_aneo_100seed_all.py` | 候选枚举→json 批量生成（AF3 dialect；Mol-1 需转换，bench_switch/build_inputs.py 可参考） |
 | 传输瘦身 | `<WORKSPACE_ROOT>/scripts/build_af3_aneo_100seed_slim.py` | MSA/模板拆包 75x 压缩（Mol-1 用文件路径共享天然免瘦身） |
-| OpenDDE 仓库 | `<OPENDDE_DIR>`（venv 已装, CLI: `.venv/bin/opendde`） | S1 正交 + S3 三元正交 |
-| ~~AF3~~（退役保险丝） | `<AF3_DIR>` + 权重 `<AF3_WEIGHTS>` | 仅 workflow §7.5 触发条件时使用 |
+| OpenDDE 仓库 | `<TOOLS_ROOT>/OpenDDE-git`（venv 已装, CLI: `.venv/bin/opendde`） | S1 正交 + S3 三元正交 |
+| ~~AF3~~（退役保险丝） | `<TOOLS_ROOT>/AF3/alphafold3` + 权重 `/data/prodb_path/PRODB3/models` | 仅 workflow §7.5 触发条件时使用 |
 | 引擎切换验证数据 | `<WORKSPACE_ROOT>/Mol-1/bench_switch/`（13 体系 Mol-1/OD/Prot-v1/AF3 四方对照 + reseed） | 阈值校准的实证底账 |
 
 ## 7. 交付包五道审核防线（⚠️ 2026-10-13 固化，筛选收官→人工核验前必过）
@@ -255,7 +263,7 @@ python3 af3_dualaxis_postprocess.py --target mc2r \
 
 1. **序列层**：fasta 逐条对**设计输入 json 原文**比对（源头核对，不对中间汇总）；查重复 ID/序列
 2. **标签层**：象限/lb/iptm **程序化直出自 dualaxis CSV**，禁止手抄进 fasta/报告；报告-CSV 交叉抽查，内部矛盾=笔误信号
-3. **结构层**：结构内 binder 链序列 == fasta 逐条验证；交付前 `ls -L` 全软链实体化（指向远端的软链必断：远端A = `ssh -p <REMOTE_PORT> -i <DEPLOY_KEY_PATH> rcdb@<REMOTE_HOST>`，远端B = 同 key 直连 `rcdb@<REMOTE_HOST2>`）
+3. **结构层**：结构内 binder 链序列 == fasta 逐条验证；交付前 `ls -L` 全软链实体化（指向远端的软链必断：253.60 = `ssh -p 10021 -i <WORKSPACE_ROOT>/MD_trend_analysis/md_extend/deploy_key rcdb@<REMOTE_HOST>`，18.74 = 同 key 直连 `rcdb@<REMOTE_HOST_105>`）
 4. **覆盖层**：gate/阈值变更后**所有批次同版本重跑**（漏批=旧指标混入，boltzgen 批漏 v2 致 3893 AF3 lb 低报 0.29）；交付集 vs 引擎全集数量对账；fasta 计数用 `startswith('>')` 勿用 `count('>')`
 5. **能量层**：新晋候选立即同协议补能量（PyRosetta env 用 AnewOmni py3.10；Schrodinger 数值在 out.csv 第 2 行）；rank 全量重排；双前缀归一化 `'mc4r_'+m.split('mc4r_')[-1]` 防 mc2r 混入
 6. **对照链身份层（⚠️ 2026-10-20 增，8QJ2 事故）**：从参考结构取链必须**坐标核验**——在原始沉积坐标中测该链到各伙伴最小距 + 对照 RCSB entity 注释（身份=位置+注释双确认）；**禁止文件名/长度/链字母启发式**。实例：8QJ2 链 N(138aa VHH 长度) 实为 Nb35(Gs 稳定体, 坐标坐 Gα/Gβ 3.1/2.5Å)，真 pN162=链 D(SEQRES 117aa, 坐标坐口袋 2.7Å)——按长度取链导致全部 "pN162 对照" 污染一周后才被发现。同族教训：S1 残基编号身份校验（构建体 147≠BW147）；**一切"身份"假设必须核验**
