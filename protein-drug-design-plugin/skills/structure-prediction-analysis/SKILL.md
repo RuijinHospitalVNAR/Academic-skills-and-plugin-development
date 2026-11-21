@@ -95,6 +95,22 @@ CUDA_VISIBLE_DEVICES=<g> bash <WORKSPACE_ROOT>/Mol-1/run_mol.sh pred \
 | **全局 seed 池机制**（2026-11-20）| `--use_seeds_in_json` 只取 `json_data[0].modelSeeds` 作全局池，所有 job 共用（inference.py:579）；各 job 自身 modelSeeds（除首）被忽略——混合池 shard 会超配（GLP1R shard2 池50 混入 T2 池15 job → 51 个超配 +1,785 seeds，多算不错杀）；精确 seeds 语义用单任务拆分 |
 | **远端放量前三验**（2026-11-20）| ①1 job 冒烟：首 job 产出 cif+summary 双件后才推全量；②宣布部署/启动成功必须三验（pgrep 进程 + ls 产物 + 日志尾部），不许凭发射动作宣布完成；③跨会话部署状态以远端实测为准，不信本地记忆。五类失误全案见 GLP1R handoff「Agent 行为教训索引」 |
 
+### 2.5b 多服务器多任务联合运行命名约定（2026-11 实战收敛：TNFR1 C0.5/C1 三端 + GLP1R C1 本机+101+102；2026-11-21 固化入技能）
+
+| 对象 | 约定 | 实战例 |
+|---|---|---|
+| 任务名 | `{体系}{阶段}_c{池序号NNNNN}` **全局唯一含池序号**——任一端产出合并无需改名 | `p2_c00507` / `c1_g0123` |
+| seeds | **阶段预分配不重叠区段**（防跨阶段合并混算） | C0.5 用 87231-35 / C1 用 87236-60 |
+| json 目录 | `{阶段}_{版本/端别}` 三段法：本机路径版 `_local` / 容器路径版 `_remote` / 端别段 `_102`/`_105` / 本机专属抽取段 `_local_run` | `c05_local_run` / `redist/remote_jsons` |
+| shard | `shard{n}_gpu{n}.json`（分片号=GPU 号，一卡一片） | `shard3_gpu3.json` |
+| 输出目录 | `{阶段}` 直接寻址；里程碑任务可语义命名 | `mol_c05` / `mol_c1` / `out_592` |
+| 守护脚本 | `{阶段}_{端别}_{职能}.sh`；同职能多轮加字母后缀 | `c1_101_watchdog.sh` / `c05_keepalive_b.sh` |
+| flag 文件 | `{语义事件}.flag` = **跨进程/跨会话信号**，下游链按 flag 触发（watch→flag→next） | `c134_done.flag` / `102_recovered.flag` |
+| 任务日志 | `{任务名}_gpu{g}.log`；失败追加 `failures.txt`（台账式） | `p2_c00063_gpu2.log` |
+| 完成标记 | runner 终行打 `ALL_{阶段}_{端}_DONE GPUs=… total=N`——完成判定认终结标记 | `ALL_C1_101_DONE` |
+
+**铁律：任务名 / seed / seeds 区段三者在任一端不得重复——重名 = 输出目录互覆**（多端并行写同一 out 时尤甚）。跨端分发前先对账：目标端无同名任务目录、本端 seeds 区段未被占用。
+
 ### 2.6 AF3 归档段（已退役→保险丝，触发条件见 workflow §7.5）
 
 历史部署：官方源码版无 `--num_seeds`（seeds 全写 JSON modelSeeds）；`--num_diffusion_samples=1` 必带；权重 `/data1/PRODB3/models`；XLA jax_cache 复用。历史输出布局 `aneo100s`（§5 后处理仍支持，用于分析 AF3 存量数据）：`{out_root}/{target}_100s_c{NNNN}/seed-{s}_sample-{k}/` 下 `model.cif` + `summary_confidences.json`；顶层巨型 `{cand}_confidences.json` 传输时排除（151 候选 28GB→3.9GB）。AF3 标度历史判据锚点：聚类池下限 ipTM≥0.40 / 轴二高置信门 0.65 / S0.5 弃置线 0.4 复核线 0.65——**Mol-1 上全部 [待校准]**。
