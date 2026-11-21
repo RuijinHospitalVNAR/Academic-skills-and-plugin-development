@@ -34,6 +34,10 @@ metadata: {"skillKey":"periodic-review","userInvocable":true}
    （覆盖 AF3_prediction/A9_Multimer/A9_UricAcid 等深层）；pdd-plugin 双副本合并为一行。
 2. **逐份提取最新状态**：先 `stat` mtime 定活跃度，再按文件条目排序方向读尾段/头段；
    每份提取四项 = 最新日期 / 当前状态一句话 / 下一步 / 阻塞。mtime 只是线索，**内容才是真相**。
+   **断档检测（HANDOFF-COVERAGE CHECK，2026-11-20 用户指令）**：若项目产物 mtime 分布/运行进程/输出文件
+   新于该 handoff 最新条目 ≥1 天（有执行无记录），标 ⚠ 断档候选进风险区，后续核查补记
+   （数字反推实证，注明"断档补记"）——**优先级高于内容抽查**（先查漏记，再查记得对不对；案底与规则全文见
+   project_memory HANDOFF-COVERAGE CHECK RULE 行）。
 3. **资源状态**：`nvidia-smi` 查在位卡与利用率，GPU 台账以 project_memory「GPU FLEET」权威行为准（2026-10-25 8 卡新秩序，勿引用更早的禁用记录；启动前核实+按 UUID 绑定为不变量）；检查 watchdog 与长任务状态；**汇总本周 daily_audit 报告**（`reviews/daily_audit/reports/*/audit.md`）的 findings 计数与新异常，命中≠错误，异常项列风险区。
 4. **生成周报**：严格用 `reviews/weekly/_template.md` 栏目；状态矩阵按活跃度降序，停滞 ≥2 周标 ⚠。
 5. **风险交叉核对**：上一期周报风险区逐条闭环或滚动；对任何声称"已记录 handoff"的结论做落盘验证
