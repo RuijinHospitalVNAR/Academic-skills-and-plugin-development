@@ -253,7 +253,7 @@ python3 af3_dualaxis_postprocess.py --target mc2r \
 | 聚类分支 | 勿按 ipTM 0.65 先拆互斥分支再聚类（B/C 证据错位）；用统一池+双轴解耦 |
 | 输出目录 | rep_poses 按靶分子子目录（两靶共用 --out 时防互删） |
 | Kabsch | 行向量约定 `M=U@D@Vt`, `t=qc-pc@M`（P@M+t≈Q）；实现后必须用受控测试验证残差 ~1e-14。**最低限度自检：同一文件对比 RMSD 必须为 0**（2026-09-17 实踩：diff 里重复加质心 yc，自检竟得 2.2 Å，排错半天；无自检的 RMSD 数字不可信） |
-| **OD rep 姿态必须拉回本地实体** | OD 与 AF3 结构不同，交叉核验/效能分析需双引擎姿态；所有 OD 选出的 rep cif 一律 tar 流式拉回（远端打包→本地解压，软链目标 /data/rcdb 本机同路径落实体；253.60 走 -p 10021+deploy_key，18.74 同 key 直连），交付前 `ls -L` 验证（2026-10-15 用户规则，一次性清零 361 断链） |
+| **OD rep 姿态必须拉回本地实体** | OD 与 AF3 结构不同，交叉核验/效能分析需双引擎姿态；所有 OD 选出的 rep cif 一律 tar 流式拉回（远端打包→本地解压，软链目标 <REMOTE_DATA_ROOT> 本机同路径落实体；主机A 走 `-p <REMOTE_PORT>`+`<DEPLOY_KEY_PATH>`，主机B 同 key 直连（真实地址见本地 handoff）），交付前 `ls -L` 验证（2026-10-15 用户规则，一次性清零 361 断链） |
 | **BW/残基编号身份校验** | 跨编号体系取残基（构建体 vs UniProt vs BW）时**必须校验氨基酸身份**：同号残基常是不同残基（实测构建体147=ILE 被 UniProt R147 误用、构建体258=GLU 被当 W258，S1 微开关整表作废教训）；正确做法 = c2u 映射候选 + `get_resname()==期望值` 双重校验，都不符返回 None（region_cache 的 c2u 是桥接权威） |
 | **CDR3 范围界定（⚠️ 用户长期规则）** | CDR3 边界必须**双法互检**：①锚定法——FR3 保守锚 YYC(A) 类起、FR4 锚 (W)G(GGG)/EGGG 类前止（VNAR 常见 YSCAQ/YYCAR 起、WGQ/WGE 前止）；②ANARCII 法——`<HOME>/anaconda3/bin/anarcii -t vnar`（transformer, v2.0.5, 本地 base env），IMGT 编号下 **CDR3 = 105–117**（含 111.x/112.x 插入码），118 起 FR4。Python API：`Anarcii(seq_type="vnar").number([seq])` 返回 dict（键 'Sequence 1'，含 numbering/score/chain_type），**方法名是 `number` 不是 `run`**；无 GPU 加 `-c/--cpu`；两法不一致以 ANARCII 为准并人工核对锚点。勿用传统 ANARCI（HMM 无鲨鱼 germline，识别不了 VNAR） |
 | **总量验收禁令** | `find\|wc -l` 出数 ≠ 在跑 ≠ 跑完：必须执行期防线 E1 矩阵对账（应跑×实跑）+ E2 归属核验（GLP1R 邻项目 3,575 cif 误读实证） |
@@ -290,9 +290,9 @@ python3 af3_dualaxis_postprocess.py --target mc2r \
 
 1. **序列层**：fasta 逐条对**设计输入 json 原文**比对（源头核对，不对中间汇总）；查重复 ID/序列
 2. **标签层**：象限/lb/iptm **程序化直出自 dualaxis CSV**，禁止手抄进 fasta/报告；报告-CSV 交叉抽查，内部矛盾=笔误信号
-3. **结构层**：结构内 binder 链序列 == fasta 逐条验证；交付前 `ls -L` 全软链实体化（指向远端的软链必断：253.60 = `ssh -p 10021 -i <WORKSPACE_ROOT>/MD_trend_analysis/md_extend/deploy_key rcdb@<REMOTE_HOST>`，18.74 = 同 key 直连 `rcdb@<REMOTE_HOST_105>`）
+3. **结构层**：结构内 binder 链序列 == fasta 逐条验证；交付前 `ls -L` 全软链实体化（指向远端的软链必断：主机A = `ssh -p <REMOTE_PORT> -i <DEPLOY_KEY_PATH> user@<REMOTE_HOST_A>`，主机B = 同 key 直连 `user@<REMOTE_HOST_B>`（真实地址见本地 handoff） `rcdb@<REMOTE_HOST_105>`）
 4. **覆盖层**：gate/阈值变更后**所有批次同版本重跑**（漏批=旧指标混入，boltzgen 批漏 v2 致 3893 AF3 lb 低报 0.29）；交付集 vs 引擎全集数量对账；fasta 计数用 `startswith('>')` 勿用 `count('>')`
-5. **能量层**：新晋候选立即同协议补能量（PyRosetta env 用 AnewOmni py3.10；Schrodinger 数值在 out.csv 第 2 行）；rank 全量重排；双前缀归一化 `'mc4r_'+m.split('mc4r_')[-1]` 防 mc2r 混入
+5. **能量层（⚠️ 2026-11-23 主口径切换：Germinal relax dG）**：能量主轴 = **Germinal FastRelax 后 interface dG**（协议见 [references/germinal-relax-protocol.md](references/germinal-relax-protocol.md)——max_iter200/constrain_to_start/lbfgs_armijo_nonmonotone/MoveMap bbχ+jump锁/ref2015 + IAM pack 双开 + calc_dSASA 显式，运行时 r387+py3.10）；**pack-only dG 降为快关注记轴勿排名**（实证 ρ=0.007、top20 交集 0/20）；relax 前后对照出 INTERFACE_LOST/DESTABILIZED/STABLE flag（注记级）+ WT 锚对照 + 3-seed 方差（std>2 REU 标 HIGH_VAR）；MMGBSA（Schrodinger 数值在 out.csv 第 2 行）为观察位非硬 gate；rank 全量重排；双前缀归一化 `'mc4r_'+m.split('mc4r_')[-1]` 防混入
 6. **对照链身份层（⚠️ 2026-10-20 增，8QJ2 事故）**：从参考结构取链必须**坐标核验**——在原始沉积坐标中测该链到各伙伴最小距 + 对照 RCSB entity 注释（身份=位置+注释双确认）；**禁止文件名/长度/链字母启发式**。实例：8QJ2 链 N(138aa VHH 长度) 实为 Nb35(Gs 稳定体, 坐标坐 Gα/Gβ 3.1/2.5Å)，真 pN162=链 D(SEQRES 117aa, 坐标坐口袋 2.7Å)——按长度取链导致全部 "pN162 对照" 污染一周后才被发现。同族教训：S1 残基编号身份校验（构建体 147≠BW147）；**一切"身份"假设必须核验**
 
 **交付包标准结构**：`shortlist_structures/` = `candidates.fasta`（header：ID+组名+各引擎象限(lb,iptm)+len+dG+rank+mMG+注记，**排序=实验优先级**）+ `od_rep/`+`af3_rep/`（一一对应平铺命名）+ `relaxed_pdb/`；全指标总表（档/骨架/双引擎/双能量/口袋特征）入 handoff。
@@ -312,7 +312,7 @@ python3 af3_dualaxis_postprocess.py --target mc2r \
 | S2 sanity | 二元 | — | 能量伪影只 flag 不排序（dG>+20 REU）；binder↔Gs 冲突预检 |
 | S3 三元组装 | 5 链 (+Gα/Gβ/Gγ) | **Mol-1 ≥50s×1 主读（初期与 OD 20s×1 双读）** | **gate = 联合组装占比**（pair 门由对照面板给出；BC-only=伪影）+ 双引擎漂移名单互验 ⚠️ chain_pair_iptm 字段待确认 |
 | S3.5 消融探查（可选） | 二元仅非活性模板 | 25s×1 | **单向 assay**：通过=强内在激活证据；失败不结论（α-MSH 也坍缩 0/125） |
-| S4 能量+交接 | — | pyro+MMGBSA | 六道审核防线（§7，含对照链身份） |
+| S4 能量+交接 | — | **Germinal relax dG 主轴** + MMGBSA 观察 | 八道防线（§7 执行期 E1-E4 + §8 交付，含对照链身份） |
 
 #### 8.1.1 三元引擎使用细则（2026-10-21 真 pN162 平反后定稿；⚠️ 2026-11-05 迁移: AF3 行结论为历史参照，Mol-1 行待首批重验）
 
