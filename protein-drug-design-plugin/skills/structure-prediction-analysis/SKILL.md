@@ -160,7 +160,7 @@ Aureka 开源 Drug Design Engine（AF3 系扩散模型，Python 3.11-3.13，本�
     2. **修复 = `--gpus "device=<UUID>"` + `-e LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:...`**
        （LD_LIBRARY_PATH 优先于 ldconfig 缓存，强制 dlopen 拾取宿主 libcuda 550）。
        `--runtime nvidia` 路径修不动，别再试。
-       **变体（2026-09-21 18.74 实踩）**: 若注入目录里**同时**存在宿主 libcuda.so.550 与
+       **变体（2026-09-21 主机B 实踩）**: 若注入目录里**同时**存在宿主 libcuda.so.550 与
        compat 副本 libcuda.so.560（两版本同目录），LD_LIBRARY_PATH 无法消歧 →
        **`-e LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libcuda.so.550.135` 钉死具体库**。
        新机判别法: 容器内 `find / -name "libcuda.so*"` 看注入目录里有几个版本
