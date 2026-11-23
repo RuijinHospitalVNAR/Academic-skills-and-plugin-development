@@ -1,13 +1,13 @@
 # Germinal relax 能量协议（能量主口径）
 
 > 溯源定案（2026-11-23 用户确认"这是我们原本要用的"）：protein_filter_lib part2 → VSIG4 → MC4R energy_supp_5 → TNFR1 C4 全量 1001 复刻。
-> **能量主轴 = Germinal FastRelax 后的 interface dG**；pack-only dG 降为预测几何快照注记轴。
+> **能量主轴 = Germinal FastRelax 后的 interface dG**；pack-only dG **已废弃**（不符合 Rosetta 正确使用方法）。
 
-## 1. 为什么 pack-only 必须降级（实证）
+## 1. 为什么 pack-only 废弃（实证 + 方法论）
 
 - pack vs relax 排名 **Spearman ρ=0.007**（n=1000, p=0.84），top20 交集 **0/20**
 - relax 增益倒挂：pack 头部候选 -10.9 vs 尾部 -25.8 → pack 排名被**预测侧链随机性**主导
-- 规则：pack-only dG 不得用于排名/主轴，只作快关注记
+- 方法论：Rosetta 能量评估**必须在弛豫后的结构上做**——未弛豫结构的侧链/堆积冲突未被消除，其 dG 无物理意义；pack-only 读数仅可作 relax 前基线中间量（dG_pre，供 delta_dG 与 flag 判读），**禁止作为独立能量口径输出、报告或排名**
 
 ## 2. 运行时（勿混用）
 
