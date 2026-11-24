@@ -143,7 +143,7 @@ Aureka 开源 Drug Design Engine（AF3 系扩散模型，Python 3.11-3.13，本�
 - **输出布局**：`<out>/<job_name>/seed_<seed>/predictions/` 下
   `*_sample_0.cif` + `*_summary_confidence_sample_0.json`（plddt/gpde/ptm/iptm/chain_*/ranking_score/has_clash）+ `*_full_data_*.json`
 - 资产/权重：`$OPENDDE_ROOT_DIR`（checkpoint 在其下 `checkpoint/`）
-- **远端服务器部署（2026-09-18 实证，CentOS 7 + 8×3090, rcdb@<REMOTE_HOST>）**：
+- **远端服务器部署（2026-09-18 实证，CentOS 7 + 8×3090, user@<REMOTE_HOST>）**：
   - 原生安装被 **glibc 2.17** 硬阻断（torch 2.7.1 只发 manylinux_2_28 轮子；conda-forge 的 libcudss/libcusolver 亦要求 `__glibc >=2.28`）→ 唯一路径是容器
   - **自建镜像**（官方 `aurekaresearch/opendde:v1` 在国内镜像站均不在白名单拉不到）：
     `nvidia/cuda:12.6.3-runtime-ubuntu24.04` 底座 + `pip install opendde[gpu]==1.1.1`（容器内 PyPI 快）→ 8.65GB
@@ -290,7 +290,7 @@ python3 af3_dualaxis_postprocess.py --target mc2r \
 
 1. **序列层**：fasta 逐条对**设计输入 json 原文**比对（源头核对，不对中间汇总）；查重复 ID/序列
 2. **标签层**：象限/lb/iptm **程序化直出自 dualaxis CSV**，禁止手抄进 fasta/报告；报告-CSV 交叉抽查，内部矛盾=笔误信号
-3. **结构层**：结构内 binder 链序列 == fasta 逐条验证；交付前 `ls -L` 全软链实体化（指向远端的软链必断：主机A = `ssh -p <REMOTE_PORT> -i <DEPLOY_KEY_PATH> user@<REMOTE_HOST_A>`，主机B = 同 key 直连 `user@<REMOTE_HOST_B>`（真实地址见本地 handoff） `rcdb@<REMOTE_HOST_105>`）
+3. **结构层**：结构内 binder 链序列 == fasta 逐条验证；交付前 `ls -L` 全软链实体化（指向远端的软链必断：主机A = `ssh -p <REMOTE_PORT> -i <DEPLOY_KEY_PATH> user@<REMOTE_HOST_A>`，主机B = 同 key 直连 `user@<REMOTE_HOST_B>`（真实地址见本地 handoff））
 4. **覆盖层**：gate/阈值变更后**所有批次同版本重跑**（漏批=旧指标混入，boltzgen 批漏 v2 致 3893 AF3 lb 低报 0.29）；交付集 vs 引擎全集数量对账；fasta 计数用 `startswith('>')` 勿用 `count('>')`
 5. **能量层（⚠️ 2026-11-23 主口径切换：Germinal relax dG）**：能量主轴 = **Germinal FastRelax 后 interface dG**（协议见 [references/germinal-relax-protocol.md](references/germinal-relax-protocol.md)——max_iter200/constrain_to_start/lbfgs_armijo_nonmonotone/MoveMap bbχ+jump锁/ref2015 + IAM pack 双开 + calc_dSASA 显式，运行时 r387+py3.10）；**pack-only dG 已废弃（2026-11-23 用户定稿：不符合 Rosetta 正确用法——能量评估必须在弛豫结构上做，未弛豫 dG 无物理意义；实证 ρ=0.007、top20 交集 0/20，勿复活。recheck 中的 dG_pre 仅为 relax 前基线中间量，供 delta_dG/flag 判读，不作独立口径输出）**；relax 前后对照出 INTERFACE_LOST/DESTABILIZED/STABLE flag（注记级）+ WT 锚对照 + **能量主读数 = 4 观测均值**（原+3 个 N(0,0.03Å) 文本层扰动 rep；勿用 -run:seed，r387 非法；无 rep 段标 NO_REP）+ **std>2 REU = HIGH_VAR 且参与 tier 分层**（实证 35% 候选 HIGH_VAR，单次 relax 排名不可靠）；MMGBSA（Schrodinger 数值在 out.csv 第 2 行）为观察位非硬 gate；rank 全量重排；双前缀归一化 `'mc4r_'+m.split('mc4r_')[-1]` 防混入
 6. **对照链身份层（⚠️ 2026-10-20 增，8QJ2 事故）**：从参考结构取链必须**坐标核验**——在原始沉积坐标中测该链到各伙伴最小距 + 对照 RCSB entity 注释（身份=位置+注释双确认）；**禁止文件名/长度/链字母启发式**。实例：8QJ2 链 N(138aa VHH 长度) 实为 Nb35(Gs 稳定体, 坐标坐 Gα/Gβ 3.1/2.5Å)，真 pN162=链 D(SEQRES 117aa, 坐标坐口袋 2.7Å)——按长度取链导致全部 "pN162 对照" 污染一周后才被发现。同族教训：S1 残基编号身份校验（构建体 147≠BW147）；**一切"身份"假设必须核验**

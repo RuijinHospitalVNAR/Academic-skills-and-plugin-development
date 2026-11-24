@@ -166,6 +166,14 @@ def cmd_batch(a):
             cmd_merge(argparse.Namespace(src=t[1], dst=t[2], reason=r[1].strip() if len(r)>1 else "batch", dry_run=False, user_confirmed=True))
         else: print("  (跳过)")
 
+
+
+def _refresh_meta(data):
+    """add/remove 后自动刷新 meta.count/updated（2026-11-24 审计修复: 此前 count 从不维护）"""
+    data.setdefault("meta", {})
+    data["meta"]["count"] = sum(1 for v in data.get("skills", {}).values() if v.get("status") == "active")
+    data["meta"]["updated"] = datetime.date.today().isoformat()
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = ap.add_subparsers(dest="cmd", required=True)

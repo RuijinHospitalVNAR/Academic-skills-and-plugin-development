@@ -130,6 +130,8 @@ FASTA ──[seq-struct-analysis]──> 家族归属+结构锚点
 
 ## 版本
 
+- **v0.8.0**（2026-11-24）：第 48 技能 affinity-maturation（TNFR1 战役固化）；执行期防线 E1-E4；Germinal relax 能量主口径（pack-only 废弃、4 观测均值+方差分层）；pre-commit/CI/进度图钩子链。
+
 - **0.7.0** (2026-11-12)：periodic-review 深化为五层回顾——新增日层（daily_audit 可移植三件套 v1.1：--since-days 时间窗 / BLAST 无表头 TSV 假阳治理 / 同文件去重）、月/季/年程序、新会话冷启动协议；README 对账补登记（bizard / cognitive-profile / research-dream 入列，版本史 0.5-0.6 补录）。
 - **0.6.0** (2026-10-19)：新增 project-viz（#47，Mermaid 进度/管线可视化 + pre-commit 进度图自动刷新钩子）。
 - **0.5.0** (2026-10-08)：收编 bizard（openbiox/Bizard，CC-BY-NC，798 例生物医学图表集）；2026-10-15 periodic-review（#46，跨项目周期性回顾）入列沿此版本。
