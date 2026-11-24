@@ -19,12 +19,14 @@ flowchart LR
     subgraph CHAIN["科研全链路（收编技能）"]
     research-ideation["阶段0a 文献调研与研究构思<br/>scispark"]
     research-planning["阶段0b 采集前实验设计与预注册<br/>experiment-design"]
+    affinity-maturation["阶段5c 亲和力成熟循环 (母本抗体→成熟候选, TNFR1 实证)<br/>affinity-maturation"]
     statistical-validation["阶段5b 采集后验证性统计<br/>statistical-analysis"]
     writing["阶段6 学术写作与润色<br/>academic-writing"]
     review["阶段7 论文审查与引用合规<br/>papercheck"]
     presentation["阶段8 成果展示 (PPT/视频/配图)<br/>visual-deck-builder"]
     research-ideation -.- research-planning
-    research-planning -.- statistical-validation
+    research-planning -.- affinity-maturation
+    affinity-maturation -.- statistical-validation
     statistical-validation -.- writing
     writing -.- review
     review -.- presentation

@@ -2,7 +2,7 @@
 
 English | [简体中文](README.md)
 
-A **full-chain** protein drug design skill plugin (v0.4.0, **47 skills**):
+A **full-chain** protein drug design skill plugin (v0.4.0, **48 skills**):
 
 - **Computation mainline** (4 in-house skills, empirically distilled): **sequence/structure identification → AI structure prediction & batch analysis → molecular dynamics validation → binding energy & mechanism deepening**
 - **Management & meta**: skill-manager (skill lifecycle governance)
@@ -17,7 +17,7 @@ protein-drug-design-plugin/
 ├── install.sh                        # Multi-IDE / desktop-agent installer
 ├── data/                             # Skill ledger + append-only audit log (skill-manager)
 ├── templates/skill-template/         # New-skill skeleton template
-└── skills/                           # 47 skills (incl. skill-manager)
+└── skills/                           # 48 skills (incl. skill-manager)
     ├── (computation mainline, 4)     # seq-struct-analysis / structure-prediction-analysis /
     │                                 # md-simulation-workflow / protein-design-workflow
     ├── (management & meta, 5)        # skill-manager / periodic-review / project-viz /
@@ -132,7 +132,7 @@ The built-in `skill-manager` skill governs add/merge/remove for all plugin skill
 - **0.7.0** (2026-11-12): periodic-review deepened into the five-layer review — new daily layer (portable daily_audit trio v1.1: --since-days time window / headerless BLAST TSV false-positive guard / same-file dedup), monthly/quarterly/annual procedures, new-session cold-start protocol; README reconciliation (bizard / cognitive-profile / research-dream registered, 0.5–0.6 changelog backfilled).
 - **0.6.0** (2026-10-19): added project-viz (#47, Mermaid progress/pipeline visualization + pre-commit auto-refresh hook).
 - **0.5.0** (2026-10-08): adopted bizard (openbiox/Bizard, CC-BY-NC, 798-example biomedical figure atlas); periodic-review (#46, cross-project periodic review) joined on 2026-10-15 under this version.
-- **0.4.0** (2026-09-20): added the skill-manager lifecycle module (semi-automatic generation → compare-based absorb/merge/reject → ledger + audit; single/batch modes; all 47 skills registered).
+- **0.4.0** (2026-09-20): added the skill-manager lifecycle module (semi-automatic generation → compare-based absorb/merge/reject → ledger + audit; single/batch modes; all 48 skills registered).
 - **0.3.0** (2026-09-20): adopted the complete nature-skills suite (20 skills, bilingual descriptions); added multi-IDE/desktop installer `install.sh`; removed platform-bound world-threads-entry.
 - **0.2.0** (2026-09-20): adopted 20 research-chain skills (4 boundary statements), 6 full-chain stages registered.
 - **0.1.1** (2026-09-20): data-acquisition module (general + antibody–antigen + local SAbDab2 cache); ANARCII guidelines; endpoint sanitization.

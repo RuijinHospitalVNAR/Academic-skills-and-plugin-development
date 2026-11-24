@@ -2,7 +2,7 @@
 
 [English](README_EN.md) | 简体中文
 
-蛋白质药物设计**全链路**技能插件（v0.4.0，**47 项技能**）：
+蛋白质药物设计**全链路**技能插件（v0.4.0，**48 项技能**）：
 
 - **计算主线**（4 项自研技能，实证固化）：**序列/结构鉴定 → AI 结构预测与批量分析 → 分子动力学验证 → 结合能与机制深化**
 - **管理与元技能**：skill-manager（技能生命周期管理）
@@ -17,7 +17,7 @@ protein-drug-design-plugin/
 ├── install.sh                        # 多 IDE / 桌面 agent 安装适配器
 ├── data/                             # 技能台账 + 只追加审计日志（skill-manager 产物）
 ├── templates/skill-template/         # 新技能骨架模板（扩展入口）
-└── skills/                           # 47 项技能（含 skill-manager 自管理）
+└── skills/                           # 48 项技能（含 skill-manager 自管理）
     ├── (计算主线 4 项)               # seq-struct-analysis / structure-prediction-analysis /
     │                                 # md-simulation-workflow / protein-design-workflow
     ├── (管理与元技能 5 项)           # skill-manager（添加/合并/下架+台账审计）/
@@ -133,7 +133,7 @@ FASTA ──[seq-struct-analysis]──> 家族归属+结构锚点
 - **0.7.0** (2026-11-12)：periodic-review 深化为五层回顾——新增日层（daily_audit 可移植三件套 v1.1：--since-days 时间窗 / BLAST 无表头 TSV 假阳治理 / 同文件去重）、月/季/年程序、新会话冷启动协议；README 对账补登记（bizard / cognitive-profile / research-dream 入列，版本史 0.5-0.6 补录）。
 - **0.6.0** (2026-10-19)：新增 project-viz（#47，Mermaid 进度/管线可视化 + pre-commit 进度图自动刷新钩子）。
 - **0.5.0** (2026-10-08)：收编 bizard（openbiox/Bizard，CC-BY-NC，798 例生物医学图表集）；2026-10-15 periodic-review（#46，跨项目周期性回顾）入列沿此版本。
-- **0.4.0** (2026-09-20)：新增 skill-manager 技能生命周期管理模块（半自动生成→对比三选一→台账+审计，单个/批量双模式，47 项技能全部入账）。
+- **0.4.0** (2026-09-20)：新增 skill-manager 技能生命周期管理模块（半自动生成→对比三选一→台账+审计，单个/批量双模式，48 项技能全部入账）。
 - **0.3.0** (2026-09-20)：收编 nature-skills 全部 20 项（description 双语化）；新增多 IDE/桌面 agent 适配器 `install.sh`；移除平台绑定的 world-threads-entry。
 - **0.2.0** (2026-09-20)：收编科研全链路 20 项技能（4 项加边界声明），workflow.yaml 注册 6 个全链路阶段。
 - **0.1.1** (2026-09-20)：数据采集板块（通用库+抗体-抗原库+SAbDab2 本地缓存）；ANARCII 编号规范；内网地址脱敏。

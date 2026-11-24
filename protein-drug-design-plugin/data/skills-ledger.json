@@ -811,6 +811,24 @@
           "compare_report": ""
         }
       ]
+    },
+    "affinity-maturation": {
+      "status": "active",
+      "date_added": "2026-11-24",
+      "source": "原生开发 (第48技能, TNFR1 战役固化)",
+      "provenance": "",
+      "fm_desc_head": "description: >\n  抗体/纳米抗体多位点突变亲和力成熟设计与级联筛选流水线（TNFR1 实证固化）。Use when\n  用户要对已有抗体做亲和力成熟/affinity maturation（多位点 CDR 突变设计）、从专利或文献\n  实验数据挖谱系建突变体数据集、做热点扫描/丙氨酸扫描定设计位与约束、",
+      "merges_into": [],
+      "absorbed_from": [],
+      "trigger_notes": [],
+      "decisions": [
+        {
+          "ts": "2026-11-24 20:43:58",
+          "decision": "absorb",
+          "reason": "多位点突变亲和力成熟全流程空白填补: 数据资产层(专利挖掘/谱系修正/突变体数据集/分辨率边界)+七阶段(0-FR溯源/A-热点四类决策表三约束文件/B-五引擎文库位级共识/C-级联漏斗算力经济/C4-双口径秩融合/C5-独立口径终检/D-独立终审)+十二条铁律(R2撤回/单模板/Pro-Gly锁死/族间共识/浅读数不作设计依据等)+两 references(TNFR1命令级playbook+引擎约束兼容性矩阵); 与 structure-prediction-analysis(级联复用双轴管线+Germinal协议)边界清晰",
+          "compare_report": ""
+        }
+      ]
     }
   }
 }

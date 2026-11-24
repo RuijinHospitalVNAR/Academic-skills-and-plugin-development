@@ -64,6 +64,16 @@ stages:
     proven_case: "MM/GBSA -16.79/-13.89 kcal/mol 双态对比; 块平均 SEM 校正 4.7x 低估"
 
   # ===== 全链路扩展阶段 (v0.2.0 收编科研全链路 20 技能) =====
+  affinity-maturation:                # 阶段5c: 亲和力成熟循环 (母本抗体→成熟候选, TNFR1 实证)
+    skill: affinity-maturation
+    inputs:
+      - parent_antibody: "WT 抗体序列/结构 (+ 可选 KD/谱系数据)"
+      - computational_evidence: "阶段2-5 产物 (结构/置信/能量)"
+    outputs:
+      - matured_candidates: "多位点突变候选池 (融合排名+合规+终检)"
+      - consensus_mutations: "跨引擎共识突变清单 (SPR 优先实验项)"
+    proven_case: "TNFR1 DOM1h-131-206 母本 → 7 条提交候选 (D107E/Y108H 双共识热点)"
+
   research-ideation:                # 阶段0a: 文献调研与研究构思
     skill: scispark
     alternatives: [sci-employee-deep-research, giiisp-paper-search-apis]
