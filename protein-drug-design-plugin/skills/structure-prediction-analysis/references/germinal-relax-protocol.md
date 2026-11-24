@@ -42,10 +42,14 @@ IAM         = InterfaceAnalyzerMover('A_B') + pack_input(True) + pack_separated(
 - **WT 锚对照**必带（真界面 relax 后应稳定）；候选 dG_post 优于 WT 锚 = 亲和改善信号（TNFR1: 352/1000 优于 WT -47.99）
 - rmsd_relax 偏大（4-14Å）可为 ECD 柔性区全局位移，接触/表位稳定即可判 STABLE
 
-## 5. 重复性检验（reps）
+## 5. 重复性检验与能量主读数（⚠️ 2026-11-24 终版口径）
 
-- top 段 × 3 seed（`-run:seed 101/202/303`，rotamer ramping 三条独立优化路径）+ 原观测 = 4 观测
-- **std > 2 REU 标 HIGH_VAR 降置信**（注记级，阈值可调）
+- **能量主读数 = 4 观测均值**（mean4）：原 recheck dG_post（默认起点）+ 3 个扰动起点 rep；无 reps 段的候选用单次值并标 `NO_REP`
+- **独立起点实现 = PDB 文本层坐标扰动**：numpy 对 ATOM 记录 x/y/z 列加 N(0, 0.03Å) 噪声写临时 pdb（每 rep 一个扰动 seed）
+  ⚠️ **勿用 `-run:seed`/`-run:jseed`**——r387 均为非法 option（worker 连环崩 + 69 万行 traceback）；numeric.random 无全局 RG 绑定、Atom 无 set_xyz 也全排除——文本层扰动是唯一零 API 依赖可控方案
+- **方差判读（std4，4 观测）**：std > 2 REU = HIGH_VAR **降置信且参与分层**（tierA 条件 = germ < WT 锚 ∧ var-OK(std≤2) ∧ od_jac≥0.5）
+- 实证依据（TNFR1 top300）：std p50 1.63 / p90 3.11 / max 5.26 REU；**HIGH_VAR 105/300（35%）**——单次 relax 排名 1/3 候选不可靠，均值+方差是必须项
+- 工程注记：扰动起点 relax 收敛快 ~3×（短路径，max_iter 不跑满）；WT 锚双 seed 冒烟验证锚低方差再放量
 
 ## 6. 与 MM/GBSA 的关系
 

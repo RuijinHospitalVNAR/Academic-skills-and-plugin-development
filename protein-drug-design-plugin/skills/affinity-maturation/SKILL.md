@@ -41,7 +41,7 @@ AI 计算作生成与筛选引擎，两者在每个 gate 上交叉验证**。
 | A 热点 | 单模板界面重提 + 丙氨酸扫描（**3 构象×N 重复**） | 四类决策表 + **三约束文件** |
 | B 文库 | 五引擎并行 + 验收 + 统一池 | 位点级跨引擎共识 + 排序预表 |
 | C 级联 | liabilities→5s triage→30s 精筛→25s 正交 | 各级幸存名单+读数表 |
-| C4 能量 | Germinal relax dG 主轴 + MMGBSA 观察 | 双能量秩 + flag |
+| C4 能量 | Germinal relax **4 观测均值**主轴（N(0,0.03Å) 扰动 rep ×3 + 原观测；std>2 REU=HIGH_VAR 参与分层）+ MMGBSA 观察 | 双能量秩 + flag + mean4/std4 |
 | C5 终检 | 独立口径引擎（赛方/ESMFold2）WT 基线 | ≥WT 过线名单 |
 | D 交付 | 融合排名 + 合规 + 独立终审 | 提交池 + SPR 建议序 |
 
